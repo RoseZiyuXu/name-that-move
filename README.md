@@ -2,6 +2,10 @@
 
 Time-series motion classification using [MiniRocket](https://github.com/timeseriesAI/tsai).
 
+## Update & Notice
+- As of 2026.05.06 1:00 PM Wednesday, May 6, 2026 (PDT), everything works well on Zoe's machine. It might need further tests. Please start with "pip install git+https://github.com/caizhuodi/DXARTS_TSCLF.git".
+- Tsai package changed the path of "get_minirocket_features".
+
 ## Install
 
 ```bash
@@ -13,6 +17,9 @@ pip install -e ".[dev]"
 ## Quickstart
 
 ```python
+import tsai.models.utils as _utils
+from tsai.models.MINIROCKET_Pytorch import get_minirocket_features
+_utils.get_minirocket_features = get_minirocket_features
 from motion_clf import make_dataset, extract_features, train, save_artifacts
 
 # 1. Load raw segments, apply offline augmentation, and create train/val splits
