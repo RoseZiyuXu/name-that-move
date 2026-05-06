@@ -16,7 +16,8 @@ from tsai.basics import (
     timer,
 )
 from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures, MiniRocketHead
-from tsai.models.utils import build_ts_model, default_device, get_minirocket_features
+from tsai.models.utils import build_ts_model
+from motion_clf._compat import default_device, get_minirocket_features
 
 
 def extract_features(
