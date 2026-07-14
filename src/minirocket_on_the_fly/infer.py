@@ -10,7 +10,8 @@ import numpy as np
 import torch
 from tsai.basics import load_learner
 from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures
-from tsai.models.utils import default_device, get_minirocket_features
+
+from minirocket_on_the_fly._compat import default_device, get_minirocket_features
 
 
 def load_segment(path: str | Path) -> np.ndarray:
@@ -61,7 +62,7 @@ def load_segments_batch(path: str | Path) -> np.ndarray:
 
 def load_model(
     model_dir: str | Path = "./models",
-    tag: str = "motion_clf",
+    tag: str = "minirocket_on_the_fly",
 ) -> tuple["MiniRocketFeatures", Any]:
     """Load the feature extractor and the trained learner from disk.
 

@@ -3,14 +3,23 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "motion-clf"
+name = "minirocket-on-the-fly"
 version = "0.1.0"
 description = "Time-series motion classification using MiniRocket"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
+keywords = ["imu", "motion-classification", "minirocket", "time-series"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 dependencies = [
-    "numpy==1.26.4",
+    "numpy>=1.26",
     "torch",
     "tsai",
     "tsaug",
@@ -20,7 +29,18 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ipykernel", "jupyter"]
+dev = ["pytest", "ruff", "build", "ipykernel", "jupyter"]
+
+[project.urls]
+Repository = "https://github.com/RoseZiyuXu/Minirocket_OnTheFly"
+Issues = "https://github.com/RoseZiyuXu/Minirocket_OnTheFly/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/motion_clf"]
+packages = ["src/minirocket_on_the_fly"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"

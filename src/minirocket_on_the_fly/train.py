@@ -17,7 +17,7 @@ from tsai.basics import (
 )
 from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures, MiniRocketHead
 from tsai.models.utils import build_ts_model
-from motion_clf._compat import default_device, get_minirocket_features
+from minirocket_on_the_fly._compat import default_device, get_minirocket_features
 
 
 def extract_features(
@@ -111,7 +111,7 @@ def save_artifacts(
     learn: "Learner",
     X: np.ndarray,
     output_dir: str | Path = "./models",
-    tag: str = "motion_clf",
+    tag: str = "minirocket_on_the_fly",
 ) -> None:
     """Persist the feature extractor, learner, and input-shape metadata.
 
