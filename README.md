@@ -1,66 +1,105 @@
-# motion-clf
+# MiniRocket On the Fly
 
-Time-series motion classification using [MiniRocket](https://github.com/timeseriesAI/tsai).
+Reusable MiniRocket-based motion classification for multichannel IMU time
+series. The package supports dataset preparation, offline augmentation,
+training, model persistence, and batch or single-window inference.
 
-## Update & Notice
-- As of 2026.05.06 1:00 PM Wednesday, May 6, 2026 (PDT), everything works well on Zoe's machine. It might need further tests. Please start with "pip install git+https://github.com/caizhuodi/DXARTS_TSCLF.git".
-- Tsai package changed the path of "get_minirocket_features".
+> **Project status:** Alpha. The core pipeline works, while the public API and
+> cross-platform installation are still being tested.
 
-## Install
+## Input convention
+
+Arrays use the shape `(n_samples, n_channels, n_timesteps)`. A single IMU
+window may therefore have shape `(6, 48)`, and a batch of windows `(N, 6, 48)`.
+
+## Installation
+
+Install the current development version from GitHub:
 
 ```bash
-pip install motion-clf          # from PyPI once published
-# or, in development mode:
-pip install -e ".[dev]"
+python -m pip install "git+https://github.com/RoseZiyuXu/Minirocket_OnTheFly.git"
 ```
 
-## Quickstart
+For local development:
+
+```bash
+git clone https://github.com/RoseZiyuXu/Minirocket_OnTheFly.git
+cd Minirocket_OnTheFly
+python -m pip install ".[dev]"
+```
+
+## Train a model
 
 ```python
-import tsai.models.utils as _utils
-from tsai.models.MINIROCKET_Pytorch import get_minirocket_features
-_utils.get_minirocket_features = get_minirocket_features
-from motion_clf import make_dataset, extract_features, train, save_artifacts
+from minirocket_on_the_fly import (
+    extract_features,
+    make_dataset,
+    save_artifacts,
+    train,
+)
 
-# 1. Load raw segments, apply offline augmentation, and create train/val splits
 X, y, splits = make_dataset(
     base_path="path/to/data",
     n_aug=2,
     val_fraction=0.2,
     random_seed=42,
 )
-
-# 2. Fit MiniRocketFeatures on the training split and extract features
-X_feat, mrf = extract_features(X, splits)
-
-# 3. Train a linear classifier head (pass lr=None to auto-detect via lr_find)
-learn = train(X_feat, y, splits, epochs=30, lr=None)
-
-# 4. Save feature extractor + learner + input-shape metadata
-save_artifacts(mrf, learn, X, output_dir="./models", tag="my_run")
+X_features, feature_extractor = extract_features(X, splits)
+learner = train(X_features, y, splits, epochs=30, lr=None)
+save_artifacts(feature_extractor, learner, X, output_dir="models", tag="demo")
 ```
 
-See `notebooks/train_example.ipynb` for a runnable version.
+`make_dataset()` splits the original samples first and augments only the
+training set, preventing augmented copies from leaking into validation.
+
+## Run inference
+
+```python
+from minirocket_on_the_fly import load_model, load_segment, predict
+
+feature_extractor, learner = load_model("models", tag="demo")
+window = load_segment("path/to/window.pkl")
+probabilities, labels = predict(window, feature_extractor, learner)
+```
 
 ## Data layout
 
+```text
+data/
+├── all_0_negative/
+│   └── *.pkl
+├── all_1_beginhand/
+│   └── *.pkl
+└── ...
 ```
-base_path/
-    all_0_negative/     *.pkl   → class 0
-    all_1_beginhand/    *.pkl   → class 1
-    ...
+
+Each `.pkl` file must contain either an array or a sequence whose first item is
+an array with shape `(n_channels, n_timesteps)`. Only load pickle files from
+sources you trust.
+
+## Public API
+
+| Function | Purpose |
+| --- | --- |
+| `load_segments` | Load labeled segment files |
+| `augment_segments` | Create offline augmented copies |
+| `make_dataset` | Load, split, and augment training data |
+| `extract_features` | Fit MiniRocket and extract features |
+| `train` | Train the linear classification head |
+| `save_artifacts` | Save the feature extractor and learner |
+| `load_model` | Restore saved model artifacts |
+| `predict` | Predict labels for one or more windows |
+
+Runnable examples are in [`notebooks/`](notebooks/).
+
+## Development checks
+
+```bash
+python -m pytest
+ruff check .
+python -m build
 ```
 
-Each `.pkl` must deserialise to a sequence whose first element is a
-`numpy.ndarray` of shape `(n_channels, n_timesteps)` — e.g. `(24, 96)`.
+## License
 
-## API
-
-| Function | Description |
-|---|---|
-| `load_segments(base_path, file_names)` | Load raw PKL segments into `(X, y)` |
-| `augment_segments(X, y, n_aug, ...)` | Offline AddNoise + TimeWarp augmentation |
-| `make_dataset(base_path, ...)` | Combined load → augment → split helper |
-| `extract_features(X, splits, chunksize)` | Fit MiniRocket and extract features |
-| `train(X_feat, y, splits, epochs, ...)` | Train linear head with one-cycle LR |
-| `save_artifacts(mrf, learn, X, ...)` | Save model weights and metadata |
+[MIT](LICENSE)
