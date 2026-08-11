@@ -9,7 +9,7 @@ from minirocket_on_the_fly import data
 def test_load_segments_accepts_bare_and_wrapped_arrays(tmp_path):
     class_dir = tmp_path / "class_zero"
     class_dir.mkdir()
-    expected = np.ones((6, 48), dtype=np.float32)
+    expected = np.ones((6, 96), dtype=np.float32)
 
     with (class_dir / "bare.pkl").open("wb") as file:
         pickle.dump(expected, file)
@@ -18,7 +18,7 @@ def test_load_segments_accepts_bare_and_wrapped_arrays(tmp_path):
 
     X, y = data.load_segments(tmp_path, file_names=["class_zero"])
 
-    assert X.shape == (2, 6, 48)
+    assert X.shape == (2, 6, 96)
     assert y.tolist() == ["0", "0"]
 
 

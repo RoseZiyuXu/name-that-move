@@ -43,7 +43,7 @@ def load_segments(
             ...
 
     Each `.pkl` file must deserialise to a sequence whose first element is an
-    ``np.ndarray`` of shape ``(n_channels, n_timesteps)``, e.g. ``(24, 96)``.
+    ``np.ndarray`` of shape ``(n_channels, n_timesteps)``, e.g. ``(6, 96)``.
 
     Parameters
     ----------

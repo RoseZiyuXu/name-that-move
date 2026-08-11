@@ -6,7 +6,7 @@ from minirocket_on_the_fly.infer import load_segment, load_segments_batch
 
 
 def test_load_segment_accepts_wrapped_array(tmp_path):
-    expected = np.ones((6, 48), dtype=np.float32)
+    expected = np.ones((6, 96), dtype=np.float32)
     path = tmp_path / "segment.pkl"
     with path.open("wb") as file:
         pickle.dump([expected], file)
@@ -15,11 +15,11 @@ def test_load_segment_accepts_wrapped_array(tmp_path):
 
 
 def test_load_segments_batch_adds_batch_dimension(tmp_path):
-    expected = np.ones((6, 48), dtype=np.float32)
+    expected = np.ones((6, 96), dtype=np.float32)
     path = tmp_path / "segment.pkl"
     with path.open("wb") as file:
         pickle.dump(expected, file)
 
     result = load_segments_batch(path)
 
-    assert result.shape == (1, 6, 48)
+    assert result.shape == (1, 6, 96)

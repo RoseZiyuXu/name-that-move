@@ -9,8 +9,26 @@ training, model persistence, and batch or single-window inference.
 
 ## Input convention
 
-Arrays use the shape `(n_samples, n_channels, n_timesteps)`. A single IMU
-window may therefore have shape `(6, 48)`, and a batch of windows `(N, 6, 48)`.
+Model-ready arrays use the shape `(n_samples, n_channels, n_timesteps)`. The
+default configuration matches the current performance pipeline: one six-axis
+IMU sampled at 48 Hz in two-second windows. A single window therefore has
+shape `(6, 96)`, and a batch has shape `(N, 6, 96)`.
+
+The default channel order is `acc_x`, `acc_y`, `acc_z`, `gyro_x`, `gyro_y`,
+`gyro_z`. Sampling settings remain configurable, but inference data must match
+the sample rate, duration, channel order, units, and shape used to train the
+loaded model.
+
+Continuous streams use `(timesteps, channels)` and can be segmented into
+model-ready windows:
+
+```python
+from minirocket_on_the_fly import IMUWindowConfig, make_windows
+
+config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
+X = make_windows(continuous_samples, config=config)
+print(X.shape)  # (N, 6, 96)
+```
 
 ## Installation
 
@@ -84,6 +102,9 @@ sources you trust.
 | `load_segments` | Load labeled segment files |
 | `augment_segments` | Create offline augmented copies |
 | `make_dataset` | Load, split, and augment training data |
+| `IMUWindowConfig` | Define sampling rate, duration, and channel order |
+| `make_windows` | Segment a continuous IMU stream into model-ready windows |
+| `validate_windows` | Validate shape and values and create a float32 batch |
 | `extract_features` | Fit MiniRocket and extract features |
 | `train` | Train the linear classification head |
 | `save_artifacts` | Save the feature extractor and learner |
