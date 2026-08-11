@@ -63,7 +63,7 @@ def load_segments_batch(path: str | Path) -> np.ndarray:
 def load_model(
     model_dir: str | Path = "./models",
     tag: str = "minirocket_on_the_fly",
-) -> tuple["MiniRocketFeatures", Any]:
+) -> tuple[MiniRocketFeatures, Any]:
     """Load the feature extractor and the trained learner from disk.
 
     Expects the three files written by ``save_artifacts``::
@@ -104,7 +104,7 @@ def load_model(
 
 def predict(
     X: np.ndarray,
-    mrf: "MiniRocketFeatures",
+    mrf: MiniRocketFeatures,
     learn: Any,
     chunksize: int = 32,
 ) -> tuple[np.ndarray, list]:

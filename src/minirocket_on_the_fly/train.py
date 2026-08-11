@@ -17,6 +17,7 @@ from tsai.basics import (
 )
 from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures, MiniRocketHead
 from tsai.models.utils import build_ts_model
+
 from minirocket_on_the_fly._compat import default_device, get_minirocket_features
 
 
@@ -24,7 +25,7 @@ def extract_features(
     X: np.ndarray,
     splits: tuple[np.ndarray, np.ndarray],
     chunksize: int = 32,
-) -> tuple[np.ndarray, "MiniRocketFeatures"]:
+) -> tuple[np.ndarray, MiniRocketFeatures]:
     """Fit a ``MiniRocketFeatures`` model and extract features for all samples.
 
     Parameters
@@ -60,7 +61,7 @@ def train(
     epochs: int = 30,
     batch_size: int = 64,
     lr: float | None = None,
-) -> "Learner":
+) -> Learner:
     """Train a ``MiniRocketHead`` linear classifier on pre-extracted features.
 
     If ``lr`` is ``None`` the learning-rate finder is run automatically and
@@ -107,8 +108,8 @@ def train(
 
 
 def save_artifacts(
-    mrf: "MiniRocketFeatures",
-    learn: "Learner",
+    mrf: MiniRocketFeatures,
+    learn: Learner,
     X: np.ndarray,
     output_dir: str | Path = "./models",
     tag: str = "minirocket_on_the_fly",

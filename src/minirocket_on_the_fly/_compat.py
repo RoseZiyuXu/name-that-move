@@ -13,9 +13,14 @@ except ImportError:
     # Older tsai versions expose these directly from the MiniRocket module
     # or from tsai.basics.
     try:
-        from tsai.models.MINIROCKET_Pytorch import get_minirocket_features  # type: ignore[no-redef]
+        from tsai.models.MINIROCKET_Pytorch import (
+            get_minirocket_features,  # type: ignore[no-redef]
+        )
         from tsai.models.utils import default_device  # type: ignore[no-redef]
     except ImportError:
-        from tsai.basics import default_device, get_minirocket_features  # type: ignore[no-redef]
+        from tsai.basics import (  # type: ignore[no-redef]
+            default_device,
+            get_minirocket_features,
+        )
 
 __all__ = ["default_device", "get_minirocket_features"]
