@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from minirocket_on_the_fly.preprocessing import IMUWindowConfig
 from minirocket_on_the_fly.realtime.osc_receiver import osc_channel_paths
@@ -20,7 +20,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--label", required=True, help="Motion class, such as line")
     parser.add_argument(
         "--session",
-        default=datetime.now().strftime("%Y%m%d_%H%M%S"),
+        default=datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"),
         help="Independent recording-session identifier",
     )
     parser.add_argument(
@@ -88,4 +88,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

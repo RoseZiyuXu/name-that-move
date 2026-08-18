@@ -21,6 +21,7 @@ from minirocket_on_the_fly.preprocessing import (
     make_windows,
     validate_windows,
 )
+
 __all__ = [
     "DEFAULT_CHANNEL_NAMES",
     "DEFAULT_IMU_CONFIG",

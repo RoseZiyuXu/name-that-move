@@ -55,7 +55,7 @@ class AsyncWindowRecorder:
         self._queue: Queue[CompletedWindow | object] = Queue(
             validate_positive_int(max_queue_size, name="max_queue_size")
         )
-        self._error: BaseException | None = None
+        self._error: Exception | None = None
         self._closed = False
         self._thread = Thread(target=self._run, name="imu-window-recorder", daemon=True)
         self._thread.start()
@@ -102,7 +102,9 @@ class AsyncWindowRecorder:
                     self._write(item)
                 finally:
                     self._queue.task_done()
-        except BaseException as error:
+        # Worker boundary: preserve an unexpected file-writing failure so the
+        # caller receives it on submit or close instead of losing it silently.
+        except Exception as error:  # noqa: BLE001
             self._error = error
 
     def _write(self, window: CompletedWindow | object) -> None:

@@ -21,7 +21,7 @@ class InferenceWorker:
         predict_window: Callable[[CompletedWindow], Any],
         *,
         on_result: Callable[[Any, CompletedWindow], None] | None = None,
-        on_error: Callable[[BaseException, CompletedWindow], None] | None = None,
+        on_error: Callable[[Exception, CompletedWindow], None] | None = None,
         max_queue_size: int = 1,
     ) -> None:
         """Create and start a bounded background inference worker."""
@@ -68,7 +68,9 @@ class InferenceWorker:
                     raise TypeError("inference queue contained an invalid window")
                 try:
                     result = self._predict_window(item)
-                except BaseException as error:
+                # Worker boundary: forward predictor failures without allowing
+                # one failed window to terminate real-time inference.
+                except Exception as error:  # noqa: BLE001
                     if self._on_error is not None:
                         self._on_error(error, item)
                 else:
@@ -76,4 +78,3 @@ class InferenceWorker:
                         self._on_result(result, item)
             finally:
                 self._queue.task_done()
-
