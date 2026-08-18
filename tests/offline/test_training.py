@@ -27,6 +27,18 @@ def test_extract_features_rejects_invalid_windows_before_model_creation(monkeypa
         extract_features(invalid, splits)
 
 
+def test_feature_validation_adds_minirocket_sequence_dimension():
+    result = train_module.validate_feature_matrix(np.ones((4, 10)))
+
+    assert result.shape == (4, 10, 1)
+    assert result.dtype == np.float32
+
+
+def test_feature_validation_rejects_non_singleton_sequence_dimension():
+    with pytest.raises(ValueError, match="n_features, 1"):
+        train_module.validate_feature_matrix(np.ones((4, 10, 2)))
+
+
 def test_extract_features_rejects_overlapping_splits():
     X = np.ones((4, 6, 96), dtype=np.float32)
     splits = (np.array([0, 1, 2]), np.array([2, 3]))
@@ -73,6 +85,15 @@ def test_train_rejects_invalid_hyperparameters(argument, value):
 
     with pytest.raises(ValueError, match=argument):
         train(X_feat, y, splits, **kwargs)
+
+
+def test_train_rejects_non_boolean_show_graph():
+    X_feat = np.ones((4, 10, 1), dtype=np.float32)
+    y = np.array(["line", "circle", "other", "line"])
+    splits = (np.array([0, 1, 2]), np.array([3]))
+
+    with pytest.raises(TypeError, match="show_graph"):
+        train(X_feat, y, splits, lr=0.001, show_graph="yes")
 
 
 def test_save_artifacts_rejects_unsafe_tag_before_writing(tmp_path):

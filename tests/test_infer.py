@@ -54,6 +54,11 @@ def test_load_model_reports_all_missing_artifacts(tmp_path):
     assert "input_shape-example.pt" in message
 
 
+def test_load_model_rejects_non_boolean_cpu_setting(tmp_path):
+    with pytest.raises(TypeError, match="cpu"):
+        load_model(tmp_path, tag="example", cpu="yes")
+
+
 def test_load_model_rejects_invalid_metadata_type(tmp_path, monkeypatch):
     for name in ("input_shape-example.pt", "MRF-example.pt", "MRL-example.pkl"):
         (tmp_path / name).touch()

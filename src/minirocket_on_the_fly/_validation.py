@@ -50,10 +50,15 @@ def validate_splits(
 
 
 def validate_feature_matrix(X_feat: np.ndarray) -> np.ndarray:
-    """Validate and normalize a two-dimensional feature matrix."""
+    """Validate and normalize MiniRocket features to ``(N, features, 1)``."""
     array = np.asarray(X_feat)
-    if array.ndim != 2:
-        raise ValueError("X_feat must have shape (n_samples, n_features)")
+    if array.ndim == 2:
+        array = array[..., np.newaxis]
+    elif array.ndim != 3 or array.shape[2] != 1:
+        raise ValueError(
+            "X_feat must have shape (n_samples, n_features) or "
+            "(n_samples, n_features, 1)"
+        )
     if any(size == 0 for size in array.shape):
         raise ValueError("X_feat must not contain empty dimensions")
     if not np.issubdtype(array.dtype, np.number):

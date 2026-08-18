@@ -19,9 +19,11 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-    "numpy>=1.26",
+    "numpy>=1.26,<2",
     "torch",
     "tsai",
+    "fastcore>=1.8,<2",
+    "fastprogress>=1,<1.1",
     "tsaug",
     "scikit-learn",
     "sktime",

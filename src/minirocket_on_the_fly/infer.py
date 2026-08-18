@@ -87,6 +87,7 @@ def load_model(
     tag: str = "minirocket_on_the_fly",
     *,
     expected_config: IMUWindowConfig | None = None,
+    cpu: bool = True,
 ) -> tuple[MiniRocketFeatures, Any]:
     """Load the feature extractor and the trained learner from disk.
 
@@ -106,6 +107,10 @@ def load_model(
         Optional runtime configuration. When provided, the saved channel
         count, timestep count, sampling rate, duration, and channel order must
         all match before the model is constructed.
+    cpu:
+        Load the feature extractor and learner on CPU. This stable,
+        cross-platform default is appropriate for tests and small real-time
+        models. Set to ``False`` to use the available accelerated device.
 
     Returns
     -------
@@ -117,6 +122,8 @@ def load_model(
     """
     model_dir = Path(validate_path(model_dir, name="model_dir"))
     tag = validate_tag(tag)
+    if not isinstance(cpu, bool):
+        raise TypeError("cpu must be a boolean")
     shape_path = model_dir / f"input_shape-{tag}.pt"
     feature_path = model_dir / f"MRF-{tag}.pt"
     learner_path = model_dir / f"MRL-{tag}.pkl"
@@ -151,16 +158,13 @@ def load_model(
         )
     print(f"Model input shape: {input_shape}")
 
-    mrf = (
-        MiniRocketFeatures(n_channels, n_timesteps)
-        .to(default_device())
-        .float()
-    )
-    mrf.load_state_dict(torch.load(feature_path))
+    device = torch.device("cpu") if cpu else default_device()
+    mrf = MiniRocketFeatures(n_channels, n_timesteps).to(device).float()
+    mrf.load_state_dict(torch.load(feature_path, map_location=device))
     mrf.eval()
     mrf._minirocket_input_shape = (n_channels, n_timesteps)
 
-    learn = load_learner(learner_path, cpu=False)
+    learn = load_learner(learner_path, cpu=cpu)
 
     return mrf, learn
 
