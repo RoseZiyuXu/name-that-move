@@ -1,4 +1,10 @@
-"""Preprocess continuous IMU samples into model-ready windows."""
+"""Preprocess continuous IMU samples into model-ready windows.
+
+An IMU window is one fixed-duration segment of a continuous sensor stream,
+stored in channel-first shape ``(n_channels, n_timesteps)``. For example, the
+default configuration produces a two-second, six-channel window sampled at
+48 Hz with shape ``(6, 96)``.
+"""
 
 from __future__ import annotations
 
@@ -29,6 +35,7 @@ class IMUWindowConfig:
     channel_names: tuple[str, ...] = DEFAULT_CHANNEL_NAMES
 
     def __post_init__(self) -> None:
+        """Validate the recording configuration after initialization."""
         if self.sample_rate_hz <= 0:
             raise ValueError("sample_rate_hz must be positive")
         if self.window_duration_s <= 0:
@@ -82,6 +89,7 @@ def validate_windows(
     ndarray
         A contiguous ``float32`` batch with shape
         ``(n_windows, channels, timesteps)``.
+
     """
     array = np.asarray(windows)
     if array.ndim == 2:
@@ -122,6 +130,23 @@ def make_windows(
     ``samples`` uses the streaming-friendly shape ``(timesteps, channels)``.
     Incomplete samples at the end are dropped. By default, ``stride`` equals
     the configured window size, producing non-overlapping windows.
+
+    Parameters
+    ----------
+    samples : ndarray
+        Continuous numeric samples with shape ``(timesteps, channels)``.
+    config : IMUWindowConfig
+        Channel order and window-size configuration.
+    stride : int or None
+        Number of timesteps between window starts. ``None`` creates
+        non-overlapping windows.
+
+    Returns
+    -------
+    ndarray
+        A contiguous ``float32`` batch with shape
+        ``(n_windows, channels, timesteps)``.
+
     """
     array = np.asarray(samples)
     if array.ndim != 2:

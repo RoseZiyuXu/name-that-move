@@ -1,4 +1,8 @@
-"""MiniRocket feature extraction and linear-head training."""
+"""MiniRocket feature extraction and linear-head training.
+
+An IMU window is one fixed-duration segment of continuous sensor data with
+channel-first shape ``(n_channels, n_timesteps)``.
+"""
 
 from __future__ import annotations
 
@@ -19,6 +23,15 @@ from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures, MiniRocketHead
 from tsai.models.utils import build_ts_model
 
 from minirocket_on_the_fly._compat import default_device, get_minirocket_features
+from minirocket_on_the_fly._validation import (
+    validate_feature_matrix,
+    validate_labels,
+    validate_path,
+    validate_positive_int,
+    validate_splits,
+    validate_tag,
+)
+from minirocket_on_the_fly.preprocessing import validate_windows
 
 
 def extract_features(
@@ -41,10 +54,15 @@ def extract_features(
     Returns
     -------
     X_feat : ndarray, shape ``(N, n_features)``
+        Extracted MiniRocket features for every input window.
     mrf    : fitted ``MiniRocketFeatures`` instance (on ``default_device()``)
+        Fitted feature extractor used to transform the windows.
+
     """
-    X = X.astype(np.float32)
-    X_train = X[splits[0]]
+    X = validate_windows(X)
+    chunksize = validate_positive_int(chunksize, name="chunksize")
+    train_indices, _ = validate_splits(splits, n_samples=len(X))
+    X_train = X[train_indices]
 
     mrf = MiniRocketFeatures(X.shape[1], X.shape[2]).to(default_device()).float()
     mrf.fit(X_train)
@@ -70,16 +88,36 @@ def train(
     Parameters
     ----------
     X_feat : ndarray, shape ``(N, n_features)``
+        Pre-extracted MiniRocket feature matrix.
     y : ndarray of str labels, shape ``(N,)``
-    splits : ``(train_indices, val_indices)`` tuple
-    epochs : number of ``fit_one_cycle`` epochs
-    batch_size : DataLoader batch size
-    lr : fixed learning rate; ``None`` → auto-detect via lr_find
+        Class label for each row of ``X_feat``.
+    splits : tuple of ndarray
+        Non-overlapping ``(train_indices, val_indices)`` arrays.
+    epochs : int
+        Number of ``fit_one_cycle`` epochs.
+    batch_size : int
+        DataLoader batch size.
+    lr : float or None
+        Fixed learning rate, or ``None`` to run ``lr_find``.
 
     Returns
     -------
     learn : trained ``fastai`` ``Learner``
+        Learner containing the fitted classification head.
+
     """
+    X_feat = validate_feature_matrix(X_feat)
+    y = validate_labels(y, n_samples=len(X_feat))
+    splits = validate_splits(splits, n_samples=len(X_feat))
+    epochs = validate_positive_int(epochs, name="epochs")
+    batch_size = validate_positive_int(batch_size, name="batch_size")
+    if lr is not None:
+        if isinstance(lr, bool) or not isinstance(lr, (int, float, np.number)):
+            raise TypeError("lr must be a positive finite number or None")
+        if not np.isfinite(lr) or lr <= 0:
+            raise ValueError("lr must be a positive finite number or None")
+        lr = float(lr)
+
     tfms = [None, TSClassification()]
     batch_tfms = TSStandardize(by_sample=True)
 
@@ -125,12 +163,24 @@ def save_artifacts(
     Parameters
     ----------
     mrf : fitted ``MiniRocketFeatures``
+        Feature extractor whose state dictionary will be saved.
     learn : trained ``fastai`` ``Learner``
-    X : the full feature-extraction input, shape ``(N, n_channels, n_timesteps)``
-    output_dir : directory to write artefacts into (created if absent)
-    tag : filename suffix to distinguish model versions
+        Classification learner to export.
+    X : ndarray, shape ``(N, n_channels, n_timesteps)``
+        Full feature-extraction input used to record the model input shape.
+    output_dir : str or Path
+        Directory to write artifacts into; created when absent.
+    tag : str
+        Filename suffix used to distinguish model versions.
+
     """
-    output_dir = Path(output_dir)
+    X = validate_windows(X)
+    output_dir = Path(validate_path(output_dir, name="output_dir"))
+    tag = validate_tag(tag)
+    if not callable(getattr(mrf, "state_dict", None)):
+        raise TypeError("mrf must provide a callable state_dict method")
+    if not callable(getattr(learn, "export", None)):
+        raise TypeError("learn must provide a callable export method")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     torch.save(mrf.state_dict(), output_dir / f"MRF-{tag}.pt")

@@ -1,4 +1,8 @@
-"""Data loading and offline augmentation for motion segments."""
+"""Data loading and offline augmentation for motion segments.
+
+An IMU window is one fixed-duration segment of continuous sensor data with
+channel-first shape ``(n_channels, n_timesteps)``.
+"""
 
 from __future__ import annotations
 
@@ -56,7 +60,10 @@ def load_segments(
     Returns
     -------
     X : ndarray, shape ``(N, n_channels, n_timesteps)``
+        Loaded IMU windows in channel-first format.
     y : ndarray of str labels, shape ``(N,)``
+        Class labels derived from the folder order.
+
     """
     base_path = Path(base_path)
     X: list[np.ndarray] = []
@@ -110,7 +117,9 @@ def augment_segments(
     Parameters
     ----------
     X : ndarray, shape ``(N, n_channels, n_timesteps)``
+        Original IMU windows to augment.
     y : ndarray, shape ``(N,)``
+        Labels aligned with the windows in ``X``.
     n_aug:
         Number of augmented copies per sample.
     noise_scale:
@@ -121,7 +130,10 @@ def augment_segments(
     Returns
     -------
     X_aug : ndarray, shape ``(N * n_aug, n_channels, n_timesteps)``
+        Generated augmented windows.
     y_aug : ndarray, shape ``(N * n_aug,)``
+        Labels repeated for each generated window.
+
     """
     # tsaug expects (N, T, C); our storage convention is (N, C, T)
     X_tc = np.transpose(X, (0, 2, 1))  # (N, T, C)
@@ -155,11 +167,32 @@ def make_dataset(
     transformed copies of a sample out of the validation set and prevents
     train/validation data leakage.
 
+    Parameters
+    ----------
+    base_path : str or Path
+        Root directory that contains one sub-folder per class.
+    file_names : sequence of str
+        Ordered class-folder names passed to ``load_segments``.
+    n_aug : int
+        Number of augmented copies generated per training sample.
+    noise_scale : float
+        Standard deviation used by the noise augmenter.
+    max_speed_ratio : float
+        Maximum speed ratio used by the time-warp augmenter.
+    val_fraction : float
+        Fraction of original samples reserved for validation.
+    random_seed : int or None
+        Optional seed for reproducible splitting and augmentation.
+
     Returns
     -------
     X : ndarray, shape ``(N_total, n_channels, n_timesteps)``  (float32)
+        Original and augmented model inputs.
     y : ndarray of str labels, shape ``(N_total,)``
+        Labels aligned with ``X``.
     splits : ``(train_indices, val_indices)`` tuple compatible with ``tsai``
+        Non-overlapping indices for training and validation.
+
     """
     if not 0.0 < val_fraction < 1.0:
         raise ValueError("val_fraction must be between 0 and 1")

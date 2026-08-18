@@ -44,3 +44,13 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 88
 target-version = "py39"
+
+[tool.ruff.lint]
+extend-select = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"notebooks/**" = ["D"]
