@@ -62,3 +62,24 @@ def test_preprocessing_rejects_non_finite_values():
 def test_config_requires_a_whole_number_of_samples():
     with pytest.raises(ValueError, match="whole number"):
         IMUWindowConfig(sample_rate_hz=25, window_duration_s=0.5)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "error_type"),
+    [
+        ("sample_rate_hz", "48", TypeError),
+        ("sample_rate_hz", np.inf, ValueError),
+        ("window_duration_s", True, TypeError),
+        ("window_duration_s", np.nan, ValueError),
+    ],
+)
+def test_config_rejects_invalid_numeric_settings(field, value, error_type):
+    kwargs = {field: value}
+
+    with pytest.raises(error_type, match=field):
+        IMUWindowConfig(**kwargs)
+
+
+def test_config_rejects_invalid_channel_names():
+    with pytest.raises(TypeError, match="channel_names"):
+        IMUWindowConfig(channel_names=("acc_x", ""))

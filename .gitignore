@@ -15,4 +15,5 @@ venv/
 models/
 work/
 outputs/
+/artifacts/
 /tmp/

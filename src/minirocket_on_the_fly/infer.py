@@ -22,7 +22,7 @@ from minirocket_on_the_fly._validation import (
     validate_positive_int,
     validate_tag,
 )
-from minirocket_on_the_fly.preprocessing import validate_windows
+from minirocket_on_the_fly.preprocessing import IMUWindowConfig, validate_windows
 
 
 def load_segment(path: str | Path) -> np.ndarray:
@@ -85,6 +85,8 @@ def load_segments_batch(path: str | Path) -> np.ndarray:
 def load_model(
     model_dir: str | Path = "./models",
     tag: str = "minirocket_on_the_fly",
+    *,
+    expected_config: IMUWindowConfig | None = None,
 ) -> tuple[MiniRocketFeatures, Any]:
     """Load the feature extractor and the trained learner from disk.
 
@@ -100,6 +102,10 @@ def load_model(
         Directory that contains the saved artefacts.
     tag:
         The tag string used when the artefacts were saved.
+    expected_config:
+        Optional runtime configuration. When provided, the saved channel
+        count, timestep count, sampling rate, duration, and channel order must
+        all match before the model is constructed.
 
     Returns
     -------
@@ -136,6 +142,13 @@ def load_model(
         raise ValueError(
             "input-shape metadata must contain n_channels and n_timesteps"
         ) from error
+    if expected_config is not None:
+        _validate_saved_config(
+            input_shape,
+            n_channels=n_channels,
+            n_timesteps=n_timesteps,
+            expected_config=expected_config,
+        )
     print(f"Model input shape: {input_shape}")
 
     mrf = (
@@ -145,6 +158,7 @@ def load_model(
     )
     mrf.load_state_dict(torch.load(feature_path))
     mrf.eval()
+    mrf._minirocket_input_shape = (n_channels, n_timesteps)
 
     learn = load_learner(learner_path, cpu=False)
 
@@ -156,6 +170,8 @@ def predict(
     mrf: MiniRocketFeatures,
     learn: Any,
     chunksize: int = 32,
+    *,
+    config: IMUWindowConfig | None = None,
 ) -> tuple[np.ndarray, list]:
     """Run inference on a batch of segments.
 
@@ -169,6 +185,9 @@ def predict(
         Trained ``fastai`` Learner (from ``load_model``).
     chunksize:
         Batch size used during feature extraction.
+    config:
+        Optional runtime configuration. When provided, input windows must
+        match its channel count and timestep count.
 
     Returns
     -------
@@ -178,7 +197,15 @@ def predict(
         Predicted label for every input window.
 
     """
-    X = validate_windows(X)
+    X = validate_windows(X, config=config)
+    model_shape = getattr(mrf, "_minirocket_input_shape", None)
+    received_shape = tuple(X.shape[1:])
+    if model_shape is not None and tuple(model_shape) != received_shape:
+        raise ValueError(
+            f"Model expects window shape {tuple(model_shape)}; received "
+            f"{received_shape}. Use the same IMUWindowConfig for recording, "
+            "training, and inference, or load a compatible model."
+        )
     chunksize = validate_positive_int(chunksize, name="chunksize")
     if not callable(getattr(learn, "get_X_preds", None)):
         raise TypeError("learn must provide a callable get_X_preds method")
@@ -187,3 +214,68 @@ def predict(
     probas, _, preds_tensor = learn.get_X_preds(X_feat)
 
     return np.array(probas), preds_tensor.tolist()
+
+
+def _validate_saved_config(
+    metadata: Mapping,
+    *,
+    n_channels: int,
+    n_timesteps: int,
+    expected_config: IMUWindowConfig,
+) -> None:
+    """Fail fast when saved-model and runtime IMU configurations differ."""
+    required = ("sample_rate_hz", "window_duration_s", "channel_names")
+    missing = [name for name in required if name not in metadata]
+    if missing:
+        fields = ", ".join(missing)
+        raise ValueError(
+            f"Saved model metadata is missing {fields}. Re-save the model "
+            "with save_artifacts(..., config=config) before configuration "
+            "matching can be verified."
+        )
+
+    saved_shape = (n_channels, n_timesteps)
+    expected_shape = (expected_config.n_channels, expected_config.n_timesteps)
+    if saved_shape != expected_shape:
+        raise ValueError(
+            f"Saved model expects window shape {saved_shape}, but runtime "
+            f"configuration produces {expected_shape}. Use a matching "
+            "IMUWindowConfig or load a compatible model."
+        )
+
+    channel_names = metadata["channel_names"]
+    if isinstance(channel_names, str):
+        raise TypeError("Saved channel_names must be a sequence of channel names")
+    try:
+        saved_rate = float(metadata["sample_rate_hz"])
+        saved_duration = float(metadata["window_duration_s"])
+        saved_channels = tuple(channel_names)
+    except (TypeError, ValueError) as error:
+        raise TypeError(
+            "Saved sample_rate_hz and window_duration_s must be numeric, and "
+            "channel_names must be iterable"
+        ) from error
+
+    mismatches = []
+    if not np.isclose(saved_rate, expected_config.sample_rate_hz):
+        mismatches.append(
+            f"sample_rate_hz saved={saved_rate}, "
+            f"runtime={expected_config.sample_rate_hz}"
+        )
+    if not np.isclose(saved_duration, expected_config.window_duration_s):
+        mismatches.append(
+            f"window_duration_s saved={saved_duration}, "
+            f"runtime={expected_config.window_duration_s}"
+        )
+    if saved_channels != expected_config.channel_names:
+        mismatches.append(
+            f"channel_names saved={saved_channels}, "
+            f"runtime={expected_config.channel_names}"
+        )
+    if mismatches:
+        details = "; ".join(mismatches)
+        raise ValueError(
+            f"Saved model configuration does not match runtime configuration: "
+            f"{details}. Use the same IMUWindowConfig for recording, training, "
+            "and inference, or load a compatible model."
+        )

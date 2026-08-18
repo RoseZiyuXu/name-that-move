@@ -3,7 +3,8 @@ import pickle
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly import data
+from minirocket_on_the_fly.offline import data
+from minirocket_on_the_fly.preprocessing import IMUWindowConfig
 
 
 def test_load_segments_accepts_bare_and_wrapped_arrays(tmp_path):
@@ -29,7 +30,7 @@ def test_make_dataset_augments_training_samples_only(monkeypatch):
     monkeypatch.setattr(
         data,
         "load_segments",
-        lambda base_path, file_names: (X_orig, y_orig),
+        lambda base_path, file_names, **kwargs: (X_orig, y_orig),
     )
 
     def fake_augment(X, y, **kwargs):
@@ -56,3 +57,15 @@ def test_make_dataset_augments_training_samples_only(monkeypatch):
 def test_make_dataset_rejects_invalid_validation_fraction(val_fraction):
     with pytest.raises(ValueError, match="val_fraction"):
         data.make_dataset("unused", val_fraction=val_fraction)
+
+
+def test_load_segments_reports_config_mismatch_with_file_path(tmp_path):
+    class_dir = tmp_path / "line"
+    class_dir.mkdir()
+    path = class_dir / "wrong_size.pkl"
+    with path.open("wb") as file:
+        pickle.dump(np.ones((6, 95), dtype=np.float32), file)
+
+    config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
+    with pytest.raises(ValueError, match=r"wrong_size\.pkl.*\(6, 96\).+\(6, 95\)"):
+        data.load_segments(tmp_path, file_names=["line"], config=config)

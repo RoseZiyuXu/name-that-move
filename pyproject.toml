@@ -29,7 +29,20 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "build", "ipykernel", "jupyter"]
+realtime = ["python-osc>=1.9"]
+remote = ["requests>=2.31"]
+dev = [
+    "pytest",
+    "ruff",
+    "build",
+    "ipykernel",
+    "jupyter",
+    "python-osc>=1.9",
+    "requests>=2.31",
+]
+
+[project.scripts]
+minirocket-record = "minirocket_on_the_fly.realtime.cli:main"
 
 [project.urls]
 Repository = "https://github.com/RoseZiyuXu/Minirocket_OnTheFly"

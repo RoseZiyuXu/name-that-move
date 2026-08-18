@@ -9,6 +9,7 @@ default configuration produces a two-second, six-channel window sampled at
 from __future__ import annotations
 
 from dataclasses import dataclass
+from numbers import Real
 
 import numpy as np
 
@@ -36,12 +37,18 @@ class IMUWindowConfig:
 
     def __post_init__(self) -> None:
         """Validate the recording configuration after initialization."""
-        if self.sample_rate_hz <= 0:
-            raise ValueError("sample_rate_hz must be positive")
-        if self.window_duration_s <= 0:
-            raise ValueError("window_duration_s must be positive")
+        for name, value in (
+            ("sample_rate_hz", self.sample_rate_hz),
+            ("window_duration_s", self.window_duration_s),
+        ):
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise TypeError(f"{name} must be a positive finite number")
+            if not np.isfinite(value) or value <= 0:
+                raise ValueError(f"{name} must be a positive finite number")
         if not self.channel_names:
             raise ValueError("channel_names must not be empty")
+        if any(not isinstance(name, str) or not name for name in self.channel_names):
+            raise TypeError("channel_names must contain non-empty strings")
         if len(set(self.channel_names)) != len(self.channel_names):
             raise ValueError("channel_names must be unique")
 
@@ -113,7 +120,8 @@ def validate_windows(
         if received != expected:
             raise ValueError(
                 f"Expected window shape {expected} from the model/data "
-                f"configuration; received {received}"
+                f"configuration; received {received}. Update the data or pass "
+                "the matching IMUWindowConfig."
             )
 
     return np.ascontiguousarray(array, dtype=np.float32)
