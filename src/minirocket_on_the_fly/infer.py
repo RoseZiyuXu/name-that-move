@@ -124,7 +124,7 @@ def load_model(
 
     input_shape = torch.load(shape_path)
     if not isinstance(input_shape, Mapping):
-        raise ValueError("input-shape metadata must be a mapping")
+        raise TypeError("input-shape metadata must be a mapping")
     try:
         n_channels = validate_positive_int(
             input_shape["n_channels"], name="n_channels"

@@ -52,6 +52,15 @@ def test_load_model_reports_all_missing_artifacts(tmp_path):
     assert "input_shape-example.pt" in message
 
 
+def test_load_model_rejects_invalid_metadata_type(tmp_path, monkeypatch):
+    for name in ("input_shape-example.pt", "MRF-example.pt", "MRL-example.pkl"):
+        (tmp_path / name).touch()
+    monkeypatch.setattr(infer.torch, "load", lambda path: [6, 96])
+
+    with pytest.raises(TypeError, match="metadata must be a mapping"):
+        load_model(tmp_path, tag="example")
+
+
 def test_predict_rejects_invalid_input_before_feature_extraction(monkeypatch):
     def fail_if_called(*args, **kwargs):
         raise AssertionError("feature extraction should not run")
