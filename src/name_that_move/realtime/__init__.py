@@ -22,11 +22,11 @@ from name_that_move.realtime.window_buffer import (
 )
 
 __all__ = [
-    "AsyncWindowRecorder",
-    "CompletedWindow",
     "DEFAULT_IMU_ID",
     "DEFAULT_OSC_IP",
     "DEFAULT_OSC_PORT",
+    "AsyncWindowRecorder",
+    "CompletedWindow",
     "InferenceWorker",
     "LatestValueWindowBuffer",
     "OSCReceiver",
