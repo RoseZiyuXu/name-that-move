@@ -16,6 +16,9 @@ OSC_CHANNEL_SUFFIXES = {
     "gyro_y": "gyro/y",
     "gyro_z": "gyro/z",
 }
+DEFAULT_OSC_IP = "0.0.0.0"
+DEFAULT_OSC_PORT = 10000
+DEFAULT_IMU_ID = 1
 
 
 def osc_channel_paths(imu_id: int) -> dict[str, str]:
@@ -34,9 +37,9 @@ class OSCReceiver:
         self,
         on_value: Callable[[str, float], None],
         *,
-        ip: str = "0.0.0.0",
-        port: int = 10000,
-        imu_id: int = 2,
+        ip: str = DEFAULT_OSC_IP,
+        port: int = DEFAULT_OSC_PORT,
+        imu_id: int = DEFAULT_IMU_ID,
     ) -> None:
         """Configure an OSC receiver without opening the network port yet."""
         if not callable(on_value):
@@ -97,4 +100,3 @@ class OSCReceiver:
             self.on_value(channel, value)
         except (TypeError, ValueError):
             return
-

@@ -2,7 +2,7 @@ import pickle
 
 import numpy as np
 
-from name_that_move.realtime.osc_receiver import osc_channel_paths
+from name_that_move.realtime.osc_receiver import DEFAULT_IMU_ID, osc_channel_paths
 from name_that_move.realtime.remote_client import (
     RemoteModelClient,
     RemotePrediction,
@@ -53,6 +53,14 @@ def test_osc_paths_match_existing_phone_sender_convention():
 
     assert paths["acc_x"] == "/m/2/acc/x"
     assert paths["gyro_z"] == "/m/2/gyro/z"
+
+
+def test_default_imu_id_is_one():
+    paths = osc_channel_paths(DEFAULT_IMU_ID)
+
+    assert DEFAULT_IMU_ID == 1
+    assert paths["acc_x"] == "/m/1/acc/x"
+    assert paths["gyro_z"] == "/m/1/gyro/z"
 
 
 def test_remote_client_uploads_batch_without_temporary_file():

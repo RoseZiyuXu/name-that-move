@@ -24,6 +24,7 @@ model-ready data contract.
    installation
    hardware_setup
    data_contract
+   configuration
 
 .. toctree::
    :maxdepth: 2

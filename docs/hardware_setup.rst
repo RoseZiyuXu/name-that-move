@@ -32,16 +32,16 @@ package port is ``10000``. Both devices must be on the same Wi-Fi network.
 Expected OSC addresses
 ----------------------
 
-For the default Movesense ID ``2``, the receiver expects:
+For the default Movesense ID ``1``, the receiver expects:
 
 .. code-block:: text
 
-   /m/2/acc/x
-   /m/2/acc/y
-   /m/2/acc/z
-   /m/2/gyro/x
-   /m/2/gyro/y
-   /m/2/gyro/z
+   /m/1/acc/x
+   /m/1/acc/y
+   /m/1/acc/z
+   /m/1/gyro/x
+   /m/1/gyro/y
+   /m/1/gyro/z
 
 The IMU ID and receiving port are configurable. TouchDesigner can inspect
 incoming OSC before recording. Close any application already using the chosen

@@ -9,7 +9,12 @@ from time import monotonic
 
 from name_that_move.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
 from name_that_move.realtime.inference_worker import InferenceWorker
-from name_that_move.realtime.osc_receiver import OSCReceiver
+from name_that_move.realtime.osc_receiver import (
+    DEFAULT_IMU_ID,
+    DEFAULT_OSC_IP,
+    DEFAULT_OSC_PORT,
+    OSCReceiver,
+)
 from name_that_move.realtime.recorder import AsyncWindowRecorder
 from name_that_move.realtime.window_buffer import (
     CompletedWindow,
@@ -26,9 +31,9 @@ class RealtimePipeline:
         self,
         *,
         config: IMUWindowConfig = DEFAULT_IMU_CONFIG,
-        ip: str = "0.0.0.0",
-        port: int = 10000,
-        imu_id: int = 2,
+        ip: str = DEFAULT_OSC_IP,
+        port: int = DEFAULT_OSC_PORT,
+        imu_id: int = DEFAULT_IMU_ID,
         recorder: AsyncWindowRecorder | None = None,
         inference_worker: InferenceWorker | None = None,
         on_window: Callable[[CompletedWindow], None] | None = None,

@@ -91,7 +91,7 @@ pause sampling.
 name-that-move-record \
   --label line \
   --session session_01 \
-  --imu-id 2 \
+  --imu-id 1 \
   --port 10000
 ```
 
@@ -106,12 +106,12 @@ Configure the phone to send to the computer's local-network IP on port
 `10000`, using these addresses for the default IMU ID:
 
 ```text
-/m/2/acc/x
-/m/2/acc/y
-/m/2/acc/z
-/m/2/gyro/x
-/m/2/gyro/y
-/m/2/gyro/z
+/m/1/acc/x
+/m/1/acc/y
+/m/1/acc/z
+/m/1/gyro/x
+/m/1/gyro/y
+/m/1/gyro/z
 ```
 
 Generated files are stored under

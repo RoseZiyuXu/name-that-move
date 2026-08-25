@@ -28,7 +28,7 @@ Start a recording session
    name-that-move-record \
      --label circle \
      --session circle_session_01 \
-     --imu-id 2 \
+     --imu-id 1 \
      --port 10000 \
      --sample-rate 48 \
      --window-duration 2

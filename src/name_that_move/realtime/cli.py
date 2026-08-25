@@ -6,7 +6,12 @@ import argparse
 from datetime import datetime, timezone
 
 from name_that_move.preprocessing import IMUWindowConfig
-from name_that_move.realtime.osc_receiver import osc_channel_paths
+from name_that_move.realtime.osc_receiver import (
+    DEFAULT_IMU_ID,
+    DEFAULT_OSC_IP,
+    DEFAULT_OSC_PORT,
+    osc_channel_paths,
+)
 from name_that_move.realtime.pipeline import RealtimePipeline
 from name_that_move.realtime.recorder import AsyncWindowRecorder
 from name_that_move.realtime.window_buffer import CompletedWindow
@@ -28,9 +33,15 @@ def build_parser() -> argparse.ArgumentParser:
         default="artifacts/recordings",
         help="Root directory for generated recordings",
     )
-    parser.add_argument("--ip", default="0.0.0.0", help="Local interface to bind")
-    parser.add_argument("--port", type=int, default=10000, help="OSC input port")
-    parser.add_argument("--imu-id", type=int, default=2, help="Movesense OSC ID")
+    parser.add_argument(
+        "--ip", default=DEFAULT_OSC_IP, help="Local interface to bind"
+    )
+    parser.add_argument(
+        "--port", type=int, default=DEFAULT_OSC_PORT, help="OSC input port"
+    )
+    parser.add_argument(
+        "--imu-id", type=int, default=DEFAULT_IMU_ID, help="Movesense OSC ID"
+    )
     parser.add_argument("--sample-rate", type=float, default=48.0)
     parser.add_argument("--window-duration", type=float, default=2.0)
     parser.add_argument(
