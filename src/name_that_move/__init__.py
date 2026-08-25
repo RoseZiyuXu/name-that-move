@@ -11,6 +11,7 @@ from name_that_move.offline import (
     extract_features,
     load_segments,
     make_dataset,
+    make_session_dataset,
     save_artifacts,
     train,
 )
@@ -33,6 +34,7 @@ __all__ = [
     "load_segments",
     "load_segments_batch",
     "make_dataset",
+    "make_session_dataset",
     "make_windows",
     "predict",
     "save_artifacts",

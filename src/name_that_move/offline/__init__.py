@@ -4,6 +4,7 @@ from name_that_move.offline.data import (
     augment_segments,
     load_segments,
     make_dataset,
+    make_session_dataset,
 )
 from name_that_move.offline.training import (
     extract_features,
@@ -16,6 +17,7 @@ __all__ = [
     "extract_features",
     "load_segments",
     "make_dataset",
+    "make_session_dataset",
     "save_artifacts",
     "train",
 ]

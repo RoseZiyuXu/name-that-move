@@ -69,3 +69,71 @@ def test_load_segments_reports_config_mismatch_with_file_path(tmp_path):
     config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
     with pytest.raises(ValueError, match=r"wrong_size\.pkl.*\(6, 96\).+\(6, 95\)"):
         data.load_segments(tmp_path, file_names=["line"], config=config)
+
+
+def test_make_session_dataset_groups_classes_and_holds_out_folders(tmp_path):
+    class_folders = {"still": ("still1", "still2"), "circle": ("circle1", "circle2")}
+    for folder_number, folder in enumerate(
+        ("still1", "still2", "circle1", "circle2")
+    ):
+        folder_path = tmp_path / folder
+        folder_path.mkdir()
+        for window_number in range(2):
+            window = np.full((1, 6, 96), folder_number + window_number / 10)
+            with (folder_path / f"window_{window_number}.pkl").open("wb") as file:
+                pickle.dump(window, file)
+
+    X, y, (train_indices, val_indices) = data.make_session_dataset(
+        tmp_path,
+        class_folders,
+        validation_folders={"still2", "circle2"},
+    )
+
+    assert X.shape == (8, 6, 96)
+    assert X.dtype == np.float32
+    assert y[train_indices].tolist() == ["still", "still", "circle", "circle"]
+    assert y[val_indices].tolist() == ["still", "still", "circle", "circle"]
+    assert set(train_indices).isdisjoint(val_indices)
+
+
+def test_make_session_dataset_augments_training_folders_only(tmp_path, monkeypatch):
+    for folder in ("still1", "still2"):
+        folder_path = tmp_path / folder
+        folder_path.mkdir()
+        with (folder_path / "window.pkl").open("wb") as file:
+            pickle.dump(np.ones((6, 96)), file)
+
+    monkeypatch.setattr(
+        data,
+        "augment_segments",
+        lambda X, y, **kwargs: (X + 10, y.copy()),
+    )
+    X, y, (train_indices, val_indices) = data.make_session_dataset(
+        tmp_path,
+        {"still": ("still1", "still2")},
+        validation_folders={"still2"},
+        n_aug=1,
+    )
+
+    assert X.shape == (3, 6, 96)
+    assert y.tolist() == ["still", "still", "still"]
+    assert train_indices.tolist() == [0, 2]
+    assert val_indices.tolist() == [1]
+
+
+def test_make_session_dataset_rejects_reused_folder():
+    with pytest.raises(ValueError, match="assigned to both"):
+        data.make_session_dataset(
+            "unused",
+            {"still": ("session1", "session2"), "circle": ("session1", "session3")},
+            validation_folders={"session2", "session3"},
+        )
+
+
+def test_make_session_dataset_requires_train_and_validation_per_class():
+    with pytest.raises(ValueError, match="training folder and one validation folder"):
+        data.make_session_dataset(
+            "unused",
+            {"still": ("still1", "still2"), "circle": ("circle1", "circle2")},
+            validation_folders={"still2"},
+        )

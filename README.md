@@ -171,6 +171,32 @@ save_artifacts(
 `make_dataset()` splits the original samples first and augments only the
 training set, preventing augmented copies from leaking into validation.
 
+### Run the three-class example workflow
+
+For datasets recorded as multiple sessions per class, use
+`make_session_dataset()` to hold out complete sessions instead of randomly
+splitting related windows. The current local example uses Sessions 1–2 for
+training and Session 3 for validation:
+
+- Recording round 1 produced `still1`, `triangle1`, and `circle1`.
+- Recording round 2 produced the corresponding folders ending in `2`.
+- Recording round 3 produced the corresponding folders ending in `3`.
+
+The numeric suffix identifies the recording session, not a separate class.
+Holding out all suffix-`3` folders provides cross-session validation and avoids
+placing neighboring windows from one recording in both splits. This checks the
+package workflow and transfer to a later recording; it is not yet a
+cross-performer or cross-device benchmark.
+
+```bash
+python examples/train_example_model.py artifacts/datasets/example_data
+```
+
+The script trains `still`, `triangle`, and `circle`, saves three model
+artifacts under `artifacts/models/example_data_smoke/`, reloads them, and runs
+inference on the held-out session. The `artifacts/` directory remains ignored
+until a deliberately public dataset and model are selected for release.
+
 ## Run inference
 
 ```python
@@ -208,6 +234,7 @@ sources you trust.
 | `load_segments` | Load labeled segment files |
 | `augment_segments` | Create offline augmented copies |
 | `make_dataset` | Load, split, and augment training data |
+| `make_session_dataset` | Group class sessions and hold out complete sessions |
 | `IMUWindowConfig` | Define sampling rate, duration, and channel order |
 | `make_windows` | Segment a continuous IMU stream into model-ready windows |
 | `validate_windows` | Validate shape and values and create a float32 batch |
