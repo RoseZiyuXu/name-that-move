@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use Name That Move, please cite it using these metadata."
+title: "Name That Move"
+type: software
+abstract: >-
+  A Python package for training, evaluating, and deploying MiniRocket-based
+  IMU motion classifiers for dance, choreography, and interactive performance.
+authors:
+  - family-names: "Xu"
+    given-names: "Ziyu"
+    alias: "Rose Xu"
+    affiliation: "University of Washington, DXARTS"
+  - family-names: "Cai"
+    given-names: "Zhuodi"
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/RoseZiyuXu/name-that-move"
+url: "https://github.com/RoseZiyuXu/name-that-move"
+keywords:
+  - "IMU"
+  - "MiniRocket"
+  - "motion classification"
+  - "time series"
+  - "dance"

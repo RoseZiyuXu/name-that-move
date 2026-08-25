@@ -230,6 +230,20 @@ ruff check .
 python -m build
 ```
 
+## Citation and contributors
+
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff). GitHub can
+use this file to generate APA and BibTeX citations for the software.
+
+See [`CONTRIBUTORS.md`](CONTRIBUTORS.md) for development, advising,
+conceptualization, and institutional contributions. The project gratefully
+acknowledges support from the University of Washington eScience Institute and
+the University of Washington Department of Digital Arts and Experimental
+Media (DXARTS).
+
+Third-party software and license information are documented in
+[`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
+
 ## License
 
 [MIT](LICENSE)
