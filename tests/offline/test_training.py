@@ -4,14 +4,14 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly.offline.training import (
+from name_that_move.offline.training import (
     extract_features,
     save_artifacts,
     train,
 )
-from minirocket_on_the_fly.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
+from name_that_move.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
 
-train_module = importlib.import_module("minirocket_on_the_fly.offline.training")
+train_module = importlib.import_module("name_that_move.offline.training")
 
 
 def test_extract_features_rejects_invalid_windows_before_model_creation(monkeypatch):

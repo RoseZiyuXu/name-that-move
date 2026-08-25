@@ -3,8 +3,8 @@ from time import monotonic
 
 import numpy as np
 
-from minirocket_on_the_fly.realtime.inference_worker import InferenceWorker
-from minirocket_on_the_fly.realtime.window_buffer import (
+from name_that_move.realtime.inference_worker import InferenceWorker
+from name_that_move.realtime.window_buffer import (
     CompletedWindow,
     WindowDiagnostics,
 )

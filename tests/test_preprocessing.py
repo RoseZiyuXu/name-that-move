@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly.preprocessing import (
+from name_that_move.preprocessing import (
     DEFAULT_IMU_CONFIG,
     IMUWindowConfig,
     make_windows,

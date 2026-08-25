@@ -1,12 +1,12 @@
-"""MiniRocket On the Fly: time-series motion classification."""
+"""Name That Move: IMU classification for dance and performance."""
 
-from minirocket_on_the_fly.infer import (
+from name_that_move.infer import (
     load_model,
     load_segment,
     load_segments_batch,
     predict,
 )
-from minirocket_on_the_fly.offline import (
+from name_that_move.offline import (
     augment_segments,
     extract_features,
     load_segments,
@@ -14,7 +14,7 @@ from minirocket_on_the_fly.offline import (
     save_artifacts,
     train,
 )
-from minirocket_on_the_fly.preprocessing import (
+from name_that_move.preprocessing import (
     DEFAULT_CHANNEL_NAMES,
     DEFAULT_IMU_CONFIG,
     IMUWindowConfig,

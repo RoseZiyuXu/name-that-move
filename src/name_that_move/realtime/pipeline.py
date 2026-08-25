@@ -7,11 +7,11 @@ from collections.abc import Callable
 from threading import Event, Thread
 from time import monotonic
 
-from minirocket_on_the_fly.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
-from minirocket_on_the_fly.realtime.inference_worker import InferenceWorker
-from minirocket_on_the_fly.realtime.osc_receiver import OSCReceiver
-from minirocket_on_the_fly.realtime.recorder import AsyncWindowRecorder
-from minirocket_on_the_fly.realtime.window_buffer import (
+from name_that_move.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
+from name_that_move.realtime.inference_worker import InferenceWorker
+from name_that_move.realtime.osc_receiver import OSCReceiver
+from name_that_move.realtime.recorder import AsyncWindowRecorder
+from name_that_move.realtime.window_buffer import (
     CompletedWindow,
     LatestValueWindowBuffer,
 )

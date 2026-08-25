@@ -9,7 +9,7 @@ from time import monotonic
 
 import numpy as np
 
-from minirocket_on_the_fly.preprocessing import (
+from name_that_move.preprocessing import (
     DEFAULT_IMU_CONFIG,
     IMUWindowConfig,
     validate_windows,

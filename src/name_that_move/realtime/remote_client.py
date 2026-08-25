@@ -9,8 +9,8 @@ from typing import Any
 
 import numpy as np
 
-from minirocket_on_the_fly.preprocessing import validate_windows
-from minirocket_on_the_fly.realtime.window_buffer import CompletedWindow
+from name_that_move.preprocessing import validate_windows
+from name_that_move.realtime.window_buffer import CompletedWindow
 
 
 @dataclass(frozen=True)

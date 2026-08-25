@@ -1,11 +1,11 @@
 """Offline dataset preparation and model-training workflow."""
 
-from minirocket_on_the_fly.offline.data import (
+from name_that_move.offline.data import (
     augment_segments,
     load_segments,
     make_dataset,
 )
-from minirocket_on_the_fly.offline.training import (
+from name_that_move.offline.training import (
     extract_features,
     save_artifacts,
     train,

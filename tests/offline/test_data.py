@@ -3,8 +3,8 @@ import pickle
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly.offline import data
-from minirocket_on_the_fly.preprocessing import IMUWindowConfig
+from name_that_move.offline import data
+from name_that_move.preprocessing import IMUWindowConfig
 
 
 def test_load_segments_accepts_bare_and_wrapped_arrays(tmp_path):

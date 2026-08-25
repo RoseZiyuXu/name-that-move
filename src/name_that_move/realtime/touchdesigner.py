@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from minirocket_on_the_fly._validation import validate_positive_int
-from minirocket_on_the_fly.realtime.remote_client import RemotePrediction
-from minirocket_on_the_fly.realtime.window_buffer import CompletedWindow
+from name_that_move._validation import validate_positive_int
+from name_that_move.realtime.remote_client import RemotePrediction
+from name_that_move.realtime.window_buffer import CompletedWindow
 
 
 class TouchDesignerClient:

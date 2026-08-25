@@ -4,8 +4,8 @@ import pickle
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly.realtime.recorder import AsyncWindowRecorder
-from minirocket_on_the_fly.realtime.window_buffer import (
+from name_that_move.realtime.recorder import AsyncWindowRecorder
+from name_that_move.realtime.window_buffer import (
     CompletedWindow,
     WindowDiagnostics,
 )

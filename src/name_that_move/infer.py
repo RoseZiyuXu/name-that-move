@@ -16,13 +16,13 @@ import torch
 from tsai.basics import load_learner
 from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures
 
-from minirocket_on_the_fly._compat import default_device, get_minirocket_features
-from minirocket_on_the_fly._validation import (
+from name_that_move._compat import default_device, get_minirocket_features
+from name_that_move._validation import (
     validate_path,
     validate_positive_int,
     validate_tag,
 )
-from minirocket_on_the_fly.preprocessing import IMUWindowConfig, validate_windows
+from name_that_move.preprocessing import IMUWindowConfig, validate_windows
 
 
 def load_segment(path: str | Path) -> np.ndarray:
@@ -84,7 +84,7 @@ def load_segments_batch(path: str | Path) -> np.ndarray:
 
 def load_model(
     model_dir: str | Path = "./models",
-    tag: str = "minirocket_on_the_fly",
+    tag: str = "name_that_move",
     *,
     expected_config: IMUWindowConfig | None = None,
     cpu: bool = True,

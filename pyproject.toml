@@ -3,13 +3,21 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "minirocket-on-the-fly"
+name = "name-that-move"
 version = "0.1.0"
-description = "Time-series motion classification using MiniRocket"
+description = "IMU motion classification for dance and interactive performance"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-keywords = ["imu", "motion-classification", "minirocket", "time-series"]
+keywords = [
+    "imu",
+    "motion-classification",
+    "minirocket",
+    "time-series",
+    "dance",
+    "choreography",
+    "interactive-performance",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
@@ -44,14 +52,14 @@ dev = [
 ]
 
 [project.scripts]
-minirocket-record = "minirocket_on_the_fly.realtime.cli:main"
+name-that-move-record = "name_that_move.realtime.cli:main"
 
 [project.urls]
-Repository = "https://github.com/RoseZiyuXu/Minirocket_OnTheFly"
-Issues = "https://github.com/RoseZiyuXu/Minirocket_OnTheFly/issues"
+Repository = "https://github.com/RoseZiyuXu/name-that-move"
+Issues = "https://github.com/RoseZiyuXu/name-that-move/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/minirocket_on_the_fly"]
+packages = ["src/name_that_move"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

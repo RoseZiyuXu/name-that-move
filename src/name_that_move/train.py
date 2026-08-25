@@ -1,9 +1,9 @@
 """Compatibility imports for the offline training API.
 
-New code may import these functions from ``minirocket_on_the_fly.offline``.
+New code may import these functions from ``name_that_move.offline``.
 """
 
-from minirocket_on_the_fly.offline.training import (
+from name_that_move.offline.training import (
     extract_features,
     save_artifacts,
     train,

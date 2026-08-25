@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly.preprocessing import IMUWindowConfig
-from minirocket_on_the_fly.realtime.window_buffer import LatestValueWindowBuffer
+from name_that_move.preprocessing import IMUWindowConfig
+from name_that_move.realtime.window_buffer import LatestValueWindowBuffer
 
 
 def test_window_buffer_waits_for_every_channel():

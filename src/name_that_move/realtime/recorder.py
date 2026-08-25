@@ -10,13 +10,13 @@ from pathlib import Path
 from queue import Empty, Full, Queue
 from threading import Thread
 
-from minirocket_on_the_fly._validation import validate_path, validate_positive_int
-from minirocket_on_the_fly.preprocessing import (
+from name_that_move._validation import validate_path, validate_positive_int
+from name_that_move.preprocessing import (
     DEFAULT_IMU_CONFIG,
     IMUWindowConfig,
     validate_windows,
 )
-from minirocket_on_the_fly.realtime.window_buffer import CompletedWindow
+from name_that_move.realtime.window_buffer import CompletedWindow
 
 _STOP = object()
 _SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")

@@ -4,14 +4,14 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from minirocket_on_the_fly import infer
-from minirocket_on_the_fly.infer import (
+from name_that_move import infer
+from name_that_move.infer import (
     load_model,
     load_segment,
     load_segments_batch,
     predict,
 )
-from minirocket_on_the_fly.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
+from name_that_move.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
 
 
 def test_load_segment_accepts_wrapped_array(tmp_path):

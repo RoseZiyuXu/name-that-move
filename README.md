@@ -1,8 +1,11 @@
-# MiniRocket On the Fly
+# Name That Move
 
-Reusable MiniRocket-based motion classification for multichannel IMU time
-series. The package supports dataset preparation, offline augmentation,
-training, model persistence, batch inference, and real-time OSC recording.
+**IMU motion classification for dance, choreography, and interactive
+performance — powered by MiniRocket.**
+
+Name That Move turns multichannel IMU time series into labeled movements. The
+package supports dataset preparation, offline augmentation, training, model
+persistence, batch inference, and real-time OSC recording.
 
 > **Project status:** Alpha. The core pipeline works, while the public API and
 > cross-platform installation are still being tested.
@@ -11,8 +14,15 @@ training, model persistence, batch inference, and real-time OSC recording.
 
 Model-ready arrays use the shape `(n_samples, n_channels, n_timesteps)`. The
 default configuration matches the current performance pipeline: one six-axis
-IMU sampled at 48 Hz in two-second windows. A single window therefore has
-shape `(6, 96)`, and a batch has shape `(N, 6, 96)`.
+IMU represented on a uniform 48 Hz model-input timeline in two-second windows.
+A single window therefore has shape `(6, 96)`, and a batch has shape
+`(N, 6, 96)`.
+
+Sensor measurements and BLE/OSC messages may arrive on a non-uniform timeline.
+For real-time use, the package samples the latest complete six-channel state
+at the configured rate. The 48 Hz default is therefore a configurable package
+setting, not a claim about the sensor's native output rate. Training and
+inference must use the same configuration.
 
 The default channel order is `acc_x`, `acc_y`, `acc_z`, `gyro_x`, `gyro_y`,
 `gyro_z`. Sampling settings remain configurable, but inference data must match
@@ -27,7 +37,7 @@ Continuous streams use `(timesteps, channels)` and can be segmented into
 model-ready windows:
 
 ```python
-from minirocket_on_the_fly import IMUWindowConfig, make_windows
+from name_that_move import IMUWindowConfig, make_windows
 
 config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
 X = make_windows(continuous_samples, config=config)
@@ -52,14 +62,14 @@ the two workflows use the same data contract.
 Install the current development version from GitHub:
 
 ```bash
-python -m pip install "git+https://github.com/RoseZiyuXu/Minirocket_OnTheFly.git"
+python -m pip install "git+https://github.com/RoseZiyuXu/name-that-move.git"
 ```
 
 For local development:
 
 ```bash
-git clone https://github.com/RoseZiyuXu/Minirocket_OnTheFly.git
-cd Minirocket_OnTheFly
+git clone https://github.com/RoseZiyuXu/name-that-move.git
+cd name-that-move
 python -m pip install ".[dev]"
 ```
 
@@ -78,7 +88,7 @@ saves each completed window on a background thread, so disk writing does not
 pause sampling.
 
 ```bash
-minirocket-record \
+name-that-move-record \
   --label line \
   --session session_01 \
   --imu-id 2 \
@@ -89,7 +99,7 @@ The 48 Hz and two-second defaults are configurable. For example, the command
 below records two-second windows at 52 Hz, producing `(6, 104)` arrays:
 
 ```bash
-minirocket-record --label line --sample-rate 52 --window-duration 2
+name-that-move-record --label line --sample-rate 52 --window-duration 2
 ```
 
 Configure the phone to send to the computer's local-network IP on port
@@ -113,7 +123,7 @@ Use Control-C to stop and flush pending files. The equivalent module command
 is:
 
 ```bash
-python -m minirocket_on_the_fly.realtime.cli --label line
+python -m name_that_move.realtime.cli --label line
 ```
 
 Remote inference is a separate optional feature:
@@ -130,7 +140,7 @@ reported as unclassified rather than pausing acquisition.
 ## Train a model
 
 ```python
-from minirocket_on_the_fly import (
+from name_that_move import (
     IMUWindowConfig,
     extract_features,
     make_dataset,
@@ -164,7 +174,7 @@ training set, preventing augmented copies from leaking into validation.
 ## Run inference
 
 ```python
-from minirocket_on_the_fly import IMUWindowConfig, load_model, load_segment, predict
+from name_that_move import IMUWindowConfig, load_model, load_segment, predict
 
 config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
 feature_extractor, learner = load_model(
@@ -207,8 +217,8 @@ sources you trust.
 | `load_model` | Restore saved model artifacts |
 | `predict` | Predict labels for one or more windows |
 
-Advanced workflow APIs are available from `minirocket_on_the_fly.offline` and
-`minirocket_on_the_fly.realtime`.
+Advanced workflow APIs are available from `name_that_move.offline` and
+`name_that_move.realtime`.
 
 Runnable examples are in [`notebooks/`](notebooks/).
 

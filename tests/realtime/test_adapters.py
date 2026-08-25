@@ -2,13 +2,13 @@ import pickle
 
 import numpy as np
 
-from minirocket_on_the_fly.realtime.osc_receiver import osc_channel_paths
-from minirocket_on_the_fly.realtime.remote_client import (
+from name_that_move.realtime.osc_receiver import osc_channel_paths
+from name_that_move.realtime.remote_client import (
     RemoteModelClient,
     RemotePrediction,
 )
-from minirocket_on_the_fly.realtime.touchdesigner import TouchDesignerClient
-from minirocket_on_the_fly.realtime.window_buffer import (
+from name_that_move.realtime.touchdesigner import TouchDesignerClient
+from name_that_move.realtime.window_buffer import (
     CompletedWindow,
     WindowDiagnostics,
 )

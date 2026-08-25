@@ -7,8 +7,8 @@ from queue import Empty, Full, Queue
 from threading import Thread
 from typing import Any
 
-from minirocket_on_the_fly._validation import validate_positive_int
-from minirocket_on_the_fly.realtime.window_buffer import CompletedWindow
+from name_that_move._validation import validate_positive_int
+from name_that_move.realtime.window_buffer import CompletedWindow
 
 _STOP = object()
 

@@ -5,15 +5,15 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 
-from minirocket_on_the_fly.preprocessing import IMUWindowConfig
-from minirocket_on_the_fly.realtime.osc_receiver import osc_channel_paths
-from minirocket_on_the_fly.realtime.pipeline import RealtimePipeline
-from minirocket_on_the_fly.realtime.recorder import AsyncWindowRecorder
-from minirocket_on_the_fly.realtime.window_buffer import CompletedWindow
+from name_that_move.preprocessing import IMUWindowConfig
+from name_that_move.realtime.osc_receiver import osc_channel_paths
+from name_that_move.realtime.pipeline import RealtimePipeline
+from name_that_move.realtime.recorder import AsyncWindowRecorder
+from name_that_move.realtime.window_buffer import CompletedWindow
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Create the argument parser used by ``minirocket-record``."""
+    """Create the argument parser used by ``name-that-move-record``."""
     parser = argparse.ArgumentParser(
         description="Record labeled fixed-rate IMU windows received over OSC."
     )

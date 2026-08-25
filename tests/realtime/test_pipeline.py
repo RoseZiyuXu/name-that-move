@@ -1,7 +1,7 @@
 import pytest
 
-from minirocket_on_the_fly.preprocessing import IMUWindowConfig
-from minirocket_on_the_fly.realtime.pipeline import RealtimePipeline
+from name_that_move.preprocessing import IMUWindowConfig
+from name_that_move.realtime.pipeline import RealtimePipeline
 
 
 class StubRecorder:

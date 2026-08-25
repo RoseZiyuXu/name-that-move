@@ -6,7 +6,7 @@ from collections.abc import Callable
 from threading import Thread
 from typing import Any
 
-from minirocket_on_the_fly._validation import validate_positive_int
+from name_that_move._validation import validate_positive_int
 
 OSC_CHANNEL_SUFFIXES = {
     "acc_x": "acc/x",
