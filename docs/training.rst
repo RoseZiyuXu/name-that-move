@@ -1,6 +1,34 @@
 Train the example model
 =======================
 
+Motion examples and sensor placement
+------------------------------------
+
+Wear the Movesense sensor on the **right wrist**. Keep the sensor upright in
+the same orientation it would have when you raise your arm to read a watch.
+Use the same placement and orientation during recording, training-data
+collection, and real-time inference so that the channel directions remain
+consistent.
+
+The example dataset uses ``still``, ``triangle``, and ``circle``. For
+``still``, hold the right wrist comfortably still. The following demonstrations
+show the two movement classes. Users are encouraged to wear their sensor in the
+same way and imitate these movements when testing the example model in
+real time.
+
+.. list-table:: Example movements
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Triangle
+     - Circle
+   * - .. image:: _static/triangle.gif
+          :alt: Right-wrist demonstration of the triangle movement
+          :width: 100%
+     - .. image:: _static/circle.gif
+          :alt: Right-wrist demonstration of the circle movement
+          :width: 100%
+
 Example dataset layout
 ----------------------
 
