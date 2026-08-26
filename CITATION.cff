@@ -1,5 +1,7 @@
 cff-version: 1.2.0
-message: "If you use Name That Move, please cite it using these metadata."
+message: >-
+  If you use Name That Move, please cite the software and the relevant
+  publication(s) listed in the references.
 title: "Name That Move"
 type: software
 abstract: >-
@@ -22,3 +24,43 @@ keywords:
   - "motion classification"
   - "time series"
   - "dance"
+references:
+  - type: article
+    title: >-
+      Human-Machine Ritual: Synergic Performance through Real-Time Motion
+      Recognition
+    authors:
+      - family-names: "Cai"
+        given-names: "Zhuodi"
+      - family-names: "Xu"
+        given-names: "Ziyu"
+      - family-names: "Pampin"
+        given-names: "Juan"
+    year: 2025
+    url: "https://arxiv.org/abs/2511.02351"
+    scope: >-
+      Cite this publication for the technical and performance-system lineage:
+      wearable IMU sensing, MiniRocket-based real-time motion recognition, and
+      responsive multimedia control.
+  - type: article
+    title: >-
+      Creativity ≠ Generativity: A Case Study of Attentive Machine Learning
+      in Dance Performance
+    authors:
+      - family-names: "Xu"
+        given-names: "Ziyu"
+      - family-names: "Cai"
+        given-names: "Zhuodi"
+    year: 2026
+    doi: "10.1145/3816094"
+    journal: >-
+      Proceedings of the ACM on Computer Graphics and Interactive Techniques
+    volume: "9"
+    issue: "3"
+    start: "1"
+    end: "9"
+    publisher:
+      name: "Association for Computing Machinery"
+    scope: >-
+      Cite this publication for the artistic-research context: attentive
+      machine learning, dance performance, and real-time audiovisual response.

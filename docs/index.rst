@@ -39,5 +39,6 @@ model-ready data contract.
    :maxdepth: 2
    :caption: Reference
 
+   citing
    api
    development
