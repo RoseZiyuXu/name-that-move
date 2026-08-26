@@ -1,9 +1,12 @@
 import pickle
 
 import numpy as np
+import pytest
+import requests
 
 from name_that_move.realtime.osc_receiver import DEFAULT_IMU_ID, osc_channel_paths
 from name_that_move.realtime.remote_client import (
+    RemoteInferenceError,
     RemoteModelClient,
     RemotePrediction,
 )
@@ -27,7 +30,7 @@ class FakeSession:
         self.batch = None
 
     def post(self, url, *, files, timeout):
-        assert url == "http://model.example/process"
+        assert url == "http://model.test/process"
         assert timeout == 2.0
         self.batch = pickle.load(files["file"][1])
         return FakeResponse()
@@ -66,13 +69,36 @@ def test_default_imu_id_is_one():
 def test_remote_client_uploads_batch_without_temporary_file():
     session = FakeSession()
     client = RemoteModelClient(
-        "http://model.example/process", timeout_s=2, session=session
+        "http://model.test/process", http_timeout_s=2, session=session
     )
 
     result = client.predict(make_window())
 
     assert result == RemotePrediction(label="circle", confidence=0.9)
     assert session.batch.shape == (1, 6, 96)
+
+
+def test_remote_client_rejects_documentation_placeholder():
+    with pytest.raises(ValueError, match="documentation placeholder"):
+        RemoteModelClient(
+            "https://your-model-server.example/process",
+            session=FakeSession(),
+        )
+
+
+def test_remote_client_simplifies_request_failures():
+    class FailingSession:
+        def post(self, *args, **kwargs):
+            raise requests.ConnectionError("very long low-level traceback")
+
+    client = RemoteModelClient(
+        "https://model.test/process",
+        http_timeout_s=2,
+        session=FailingSession(),
+    )
+
+    with pytest.raises(RemoteInferenceError, match="model.test"):
+        client.predict(make_window())
 
 
 def test_touchdesigner_client_sends_label_and_confidence():

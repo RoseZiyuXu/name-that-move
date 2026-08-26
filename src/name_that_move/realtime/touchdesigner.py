@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from name_that_move._validation import validate_positive_int
-from name_that_move.realtime.remote_client import RemotePrediction
+from name_that_move.realtime.prediction import Prediction
 from name_that_move.realtime.window_buffer import CompletedWindow
 
 
@@ -37,7 +37,7 @@ class TouchDesignerClient:
 
     def send(
         self,
-        prediction: RemotePrediction,
+        prediction: Prediction,
         window: CompletedWindow | None = None,
     ) -> None:
         """Send one prediction; the optional window supports worker callbacks."""

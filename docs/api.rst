@@ -22,6 +22,13 @@ Offline training
    :members:
    :show-inheritance:
 
+Offline session evaluation
+--------------------------
+
+.. automodule:: name_that_move.offline.evaluation
+   :members:
+   :show-inheritance:
+
 Saved-model inference
 ---------------------
 
@@ -45,6 +52,18 @@ Real-time pipeline
    :show-inheritance:
 
 .. automodule:: name_that_move.realtime.inference_worker
+   :members:
+   :show-inheritance:
+
+.. automodule:: name_that_move.realtime.prediction
+   :members:
+   :show-inheritance:
+
+.. automodule:: name_that_move.realtime.local_model
+   :members:
+   :show-inheritance:
+
+.. automodule:: name_that_move.realtime.predictor
    :members:
    :show-inheritance:
 

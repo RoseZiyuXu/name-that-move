@@ -33,7 +33,9 @@ Start a recording session
      --sample-rate 48 \
      --window-duration 2
 
-The recorder waits until all six channels have arrived. It then creates
+The recorder waits until all six channels have arrived. By default, it stops
+with a connection checklist if they do not arrive within two seconds; adjust
+this with ``--startup-timeout`` for a slower setup. It then creates
 non-overlapping ``(6, 96)`` windows. Press Control-C to stop and flush pending
 files.
 

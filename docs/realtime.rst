@@ -26,14 +26,19 @@ The package currently provides:
 * a working OSC recording command;
 * fixed-rate latest-value window construction;
 * asynchronous recording;
-* a reusable local or remote inference worker;
-* a prototype HTTP model client; and
+* a shared prediction result for local and remote inference;
+* a local saved-model predictor and a prototype HTTP model client;
+* a fail-fast selector and ``name-that-move-live`` command; and
 * a TouchDesigner OSC output adapter.
 
-A single command that loads the local example model, starts sensor acquisition,
-and sends predictions to TouchDesigner is still planned. Until that integration
-is completed, use the public components in :doc:`api` or the established
-Windows prototype workflow.
+The live command loads one selected backend, starts sensor acquisition, prints
+predictions, and can optionally send them to TouchDesigner. See
+:doc:`inference` for local and remote examples. The remote mode still depends
+on an independently running, compatible HTTP model server.
+
+Both live modes fail fast if a complete set of six OSC channels does not arrive
+within the configurable startup timeout. This prevents an unnoticed connection
+or port mismatch from leaving the program waiting indefinitely.
 
 Configuration rule
 ------------------

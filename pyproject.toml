@@ -56,6 +56,8 @@ dev = [
 ]
 
 [project.scripts]
+name-that-move-evaluate = "name_that_move.offline.evaluate_cli:main"
+name-that-move-live = "name_that_move.realtime.infer_cli:main"
 name-that-move-record = "name_that_move.realtime.cli:main"
 
 [project.urls]

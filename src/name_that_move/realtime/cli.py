@@ -45,6 +45,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--sample-rate", type=float, default=48.0)
     parser.add_argument("--window-duration", type=float, default=2.0)
     parser.add_argument(
+        "--startup-timeout",
+        type=float,
+        default=2.0,
+        help="Stop if all six OSC channels do not arrive within this many seconds",
+    )
+    parser.add_argument(
         "--stale-warning",
         type=float,
         default=0.25,
@@ -86,6 +92,7 @@ def main() -> None:
         imu_id=args.imu_id,
         recorder=recorder,
         on_window=report_window,
+        startup_timeout_s=args.startup_timeout,
     )
 
     print(f"Listening on {args.ip}:{args.port} for IMU {args.imu_id}")
@@ -94,7 +101,10 @@ def main() -> None:
         print(f"  {channel}: {path}")
     print(f"Saving to: {recorder.recording_dir}")
     print("Waiting until all six channels have arrived; press Control-C to stop.")
-    pipeline.run_forever()
+    try:
+        pipeline.run_forever()
+    except TimeoutError as error:
+        raise SystemExit(f"Error: {error}") from None
 
 
 if __name__ == "__main__":

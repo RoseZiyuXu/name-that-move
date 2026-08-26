@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable
+from numbers import Real
 from threading import Event, Thread
 from time import monotonic
 
@@ -37,6 +38,7 @@ class RealtimePipeline:
         recorder: AsyncWindowRecorder | None = None,
         inference_worker: InferenceWorker | None = None,
         on_window: Callable[[CompletedWindow], None] | None = None,
+        startup_timeout_s: float | None = 2.0,
     ) -> None:
         """Configure a pipeline without starting its network or worker loop."""
         if recorder is not None and recorder.config != config:
@@ -45,6 +47,13 @@ class RealtimePipeline:
                 "Pass the same IMUWindowConfig instance or equivalent values "
                 "to both components."
             )
+        if startup_timeout_s is not None:
+            if (
+                isinstance(startup_timeout_s, bool)
+                or not isinstance(startup_timeout_s, Real)
+                or not 0 < startup_timeout_s < float("inf")
+            ):
+                raise ValueError("startup_timeout_s must be positive and finite")
         self.config = config
         self.buffer = LatestValueWindowBuffer(config)
         self.receiver = OSCReceiver(
@@ -56,6 +65,9 @@ class RealtimePipeline:
         self.recorder = recorder
         self.inference_worker = inference_worker
         self.on_window = on_window
+        self.startup_timeout_s = (
+            None if startup_timeout_s is None else float(startup_timeout_s)
+        )
         self._stop_event = Event()
         self._sampling_thread: Thread | None = None
 
@@ -71,6 +83,14 @@ class RealtimePipeline:
             daemon=True,
         )
         self._sampling_thread.start()
+        if not self.buffer.wait_until_ready(self.startup_timeout_s):
+            self.stop()
+            raise TimeoutError(
+                "No complete six-channel OSC input arrived within "
+                f"{self.startup_timeout_s:.1f} seconds. Check the sensor-to-phone "
+                "connection, phone OSC sender, computer IP, UDP port, IMU ID, "
+                "and expected OSC address paths."
+            )
 
     def stop(self) -> None:
         """Stop acquisition and flush the configured background workers."""

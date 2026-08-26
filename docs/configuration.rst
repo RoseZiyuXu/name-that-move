@@ -102,6 +102,11 @@ model-input contract above.
      - ``0.25`` seconds
      - ``--stale-warning``
      - Diagnostic only; tune for the expected sensor/connection behavior.
+   * - ``startup_timeout``
+     - ``2`` seconds
+     - ``--startup-timeout`` or real-time Python API
+     - Stops recording or live inference when all six OSC channels do not
+       arrive. This is independent of HTTP inference timing.
 
 For example, only include options that differ from the defaults:
 
@@ -119,8 +124,14 @@ Flexible workflow choices
 Class labels, number of recording sessions, train/validation session split,
 augmentation settings, artifact directory, and model tag are project choices.
 Remote-server URL and timeout, TouchDesigner IP/port/OSC base path, and worker
-queue sizes are also configurable through the Python API. Document these
-choices so an experiment or performance can be reproduced.
+queue sizes are configurable. The live command exposes the backend, URL,
+timeout, TouchDesigner destination, model directory, and model tag; the Python
+API additionally exposes worker queue sizes. Document these choices so an
+experiment or performance can be reproduced.
+
+The remote HTTP timeout controls one server request. The shared OSC startup
+timeout controls how long either local or remote live mode waits for initial
+sensor data. They solve different failure cases.
 
 Current fixed conventions and limitations
 -----------------------------------------
@@ -133,8 +144,7 @@ Current fixed conventions and limitations
   another channel configuration, but the OSC adapter must be extended before
   it can receive different paths or additional sensors.
 * The reference model uses MiniRocket features plus a linear classifier.
-* Direct sensor-to-laptop BLE and a turnkey local-model real-time inference
-  command are not yet included.
+* Direct sensor-to-laptop BLE is not yet included.
 
 Before running inference
 ------------------------

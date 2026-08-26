@@ -7,7 +7,9 @@ from name_that_move.infer import (
     predict,
 )
 from name_that_move.offline import (
+    SessionEvaluation,
     augment_segments,
+    evaluate_session,
     extract_features,
     load_segments,
     make_dataset,
@@ -27,7 +29,9 @@ __all__ = [
     "DEFAULT_CHANNEL_NAMES",
     "DEFAULT_IMU_CONFIG",
     "IMUWindowConfig",
+    "SessionEvaluation",
     "augment_segments",
+    "evaluate_session",
     "extract_features",
     "load_model",
     "load_segment",

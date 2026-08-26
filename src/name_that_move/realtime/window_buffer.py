@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from numbers import Real
-from threading import Lock
+from threading import Event, Lock
 from time import monotonic
 
 import numpy as np
@@ -57,6 +57,7 @@ class LatestValueWindowBuffer:
         self._message_count = 0
         self._window_message_start = 0
         self._lock = Lock()
+        self._ready = Event()
 
     def update(
         self,
@@ -83,6 +84,12 @@ class LatestValueWindowBuffer:
             self._seen[index] = True
             self._updated_at[index] = timestamp
             self._message_count += 1
+            if self._seen.all():
+                self._ready.set()
+
+    def wait_until_ready(self, timeout_s: float | None = None) -> bool:
+        """Wait until every configured channel has received at least one value."""
+        return self._ready.wait(timeout=timeout_s)
 
     def sample(self, *, sampled_at: float | None = None) -> CompletedWindow | None:
         """Append one latest-value snapshot and return a completed window."""
@@ -114,4 +121,3 @@ class LatestValueWindowBuffer:
 
         normalized = validate_windows(data, config=self.config)[0]
         return CompletedWindow(data=normalized, diagnostics=diagnostics)
-

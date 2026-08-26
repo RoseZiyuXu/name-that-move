@@ -14,8 +14,8 @@ model-ready data contract.
 .. note::
 
    The package is alpha software. The recording and offline model workflow are
-   functional. A turnkey local-model real-time inference command and direct
-   sensor-to-laptop BLE connection remain development work.
+   functional, and live OSC windows can use either a local saved model or a
+   remote HTTP endpoint. Direct sensor-to-laptop BLE remains development work.
 
 .. toctree::
    :maxdepth: 2

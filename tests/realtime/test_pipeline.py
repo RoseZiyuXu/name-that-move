@@ -18,3 +18,19 @@ def test_pipeline_rejects_mismatched_recorder_configuration():
             config=pipeline_config,
             recorder=StubRecorder(recorder_config),
         )
+
+
+def test_pipeline_rejects_invalid_startup_timeout():
+    with pytest.raises(ValueError, match="startup_timeout_s"):
+        RealtimePipeline(startup_timeout_s=0)
+
+
+def test_pipeline_stops_when_no_complete_osc_input_arrives(monkeypatch):
+    pipeline = RealtimePipeline(startup_timeout_s=0.01)
+    monkeypatch.setattr(pipeline.receiver, "start", lambda: None)
+    monkeypatch.setattr(pipeline.receiver, "stop", lambda: None)
+
+    with pytest.raises(TimeoutError, match="No complete six-channel OSC input"):
+        pipeline.start()
+
+    assert pipeline._sampling_thread is None
