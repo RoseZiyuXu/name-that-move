@@ -47,7 +47,7 @@ docs = [
 ]
 dev = [
     "pytest",
-    "ruff",
+    "ruff==0.16.0",
     "build",
     "ipykernel",
     "jupyter",

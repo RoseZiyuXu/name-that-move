@@ -47,13 +47,12 @@ class RealtimePipeline:
                 "Pass the same IMUWindowConfig instance or equivalent values "
                 "to both components."
             )
-        if startup_timeout_s is not None:
-            if (
-                isinstance(startup_timeout_s, bool)
-                or not isinstance(startup_timeout_s, Real)
-                or not 0 < startup_timeout_s < float("inf")
-            ):
-                raise ValueError("startup_timeout_s must be positive and finite")
+        if startup_timeout_s is not None and (
+            isinstance(startup_timeout_s, bool)
+            or not isinstance(startup_timeout_s, Real)
+            or not 0 < startup_timeout_s < float("inf")
+        ):
+            raise ValueError("startup_timeout_s must be positive and finite")
         self.config = config
         self.buffer = LatestValueWindowBuffer(config)
         self.receiver = OSCReceiver(

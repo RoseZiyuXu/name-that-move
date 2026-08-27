@@ -107,9 +107,10 @@ def evaluate_session(
     )
     if not file_paths:
         raise ValueError(f"No .pkl windows found in session: {session_path}")
-    if expected_label is not None:
-        if not isinstance(expected_label, str) or not expected_label.strip():
-            raise ValueError("expected_label must be a non-empty string")
+    if expected_label is not None and (
+        not isinstance(expected_label, str) or not expected_label.strip()
+    ):
+        raise ValueError("expected_label must be a non-empty string")
 
     if model_dir is None and remote_url is None:
         raise ValueError(

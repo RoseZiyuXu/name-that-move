@@ -17,7 +17,17 @@ _EXPORTS = {
     "train": ("name_that_move.offline.training", "train"),
 }
 
-__all__ = sorted(_EXPORTS)
+__all__ = [
+    "SessionEvaluation",
+    "augment_segments",
+    "evaluate_session",
+    "extract_features",
+    "load_segments",
+    "make_dataset",
+    "make_session_dataset",
+    "save_artifacts",
+    "train",
+]
 
 
 def __getattr__(name: str) -> Any:

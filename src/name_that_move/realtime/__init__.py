@@ -35,7 +35,26 @@ _EXPORTS = {
     "osc_channel_paths": ("name_that_move.realtime.osc_receiver", "osc_channel_paths"),
 }
 
-__all__ = sorted(_EXPORTS)
+__all__ = [
+    "DEFAULT_IMU_ID",
+    "DEFAULT_OSC_IP",
+    "DEFAULT_OSC_PORT",
+    "AsyncWindowRecorder",
+    "CompletedWindow",
+    "InferenceWorker",
+    "LatestValueWindowBuffer",
+    "LocalModelPredictor",
+    "OSCReceiver",
+    "Prediction",
+    "RealtimePipeline",
+    "RemoteInferenceError",
+    "RemoteModelClient",
+    "RemotePrediction",
+    "TouchDesignerClient",
+    "WindowDiagnostics",
+    "build_predictor",
+    "osc_channel_paths",
+]
 
 
 def __getattr__(name: str) -> Any:

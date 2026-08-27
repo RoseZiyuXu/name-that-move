@@ -23,9 +23,16 @@ from name_that_move._validation import (
 )
 from name_that_move.preprocessing import IMUWindowConfig, validate_windows
 from name_that_move.window_io import (
-    load_segment as load_segment,
-    load_segments_batch as load_segments_batch,
+    load_segment,
+    load_segments_batch,
 )
+
+__all__ = [
+    "load_model",
+    "load_segment",
+    "load_segments_batch",
+    "predict",
+]
 
 
 def load_model(
