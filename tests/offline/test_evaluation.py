@@ -17,10 +17,9 @@ def test_evaluate_session_summarizes_predictions(tmp_path, monkeypatch):
         "load_segment",
         lambda path: np.ones((6, 96), dtype=np.float32),
     )
-    monkeypatch.setattr(evaluation, "load_model", lambda *args, **kwargs: (1, 2))
     monkeypatch.setattr(
         evaluation,
-        "predict",
+        "_evaluate_local",
         lambda *args, **kwargs: (
             np.array([[0.1, 0.9], [0.2, 0.8], [0.7, 0.3]]),
             ["circle", "circle", "still"],

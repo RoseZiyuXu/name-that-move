@@ -8,13 +8,13 @@ from pathlib import Path
 
 import numpy as np
 
-from name_that_move.infer import load_model, load_segment, predict
 from name_that_move.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
 from name_that_move.realtime.remote_client import RemoteModelClient
 from name_that_move.realtime.window_buffer import (
     CompletedWindow,
     WindowDiagnostics,
 )
+from name_that_move.window_io import load_segment
 
 
 @dataclass(frozen=True)
@@ -131,17 +131,8 @@ def evaluate_session(
 
     windows = np.stack([load_segment(path) for path in file_paths])
     if model_dir is not None:
-        feature_extractor, learner = load_model(
-            model_dir,
-            tag,
-            expected_config=config,
-            cpu=cpu,
-        )
-        probabilities, predicted_labels = predict(
-            windows,
-            feature_extractor,
-            learner,
-            config=config,
+        probabilities, predicted_labels = _evaluate_local(
+            windows, model_dir, tag=tag, config=config, cpu=cpu
         )
         confidences = np.max(probabilities, axis=1)
     else:
@@ -161,4 +152,29 @@ def evaluate_session(
         predicted_labels=tuple(str(label) for label in predicted_labels),
         confidences=confidences,
         expected_label=expected_label,
+    )
+
+
+def _evaluate_local(
+    windows: np.ndarray,
+    model_dir: str | Path,
+    *,
+    tag: str,
+    config: IMUWindowConfig,
+    cpu: bool,
+) -> tuple[np.ndarray, list]:
+    """Load local ML dependencies only when local inference is requested."""
+    from name_that_move.infer import load_model, predict
+
+    feature_extractor, learner = load_model(
+        model_dir,
+        tag,
+        expected_config=config,
+        cpu=cpu,
+    )
+    return predict(
+        windows,
+        feature_extractor,
+        learner,
+        config=config,
     )

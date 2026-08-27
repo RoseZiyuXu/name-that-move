@@ -25,4 +25,7 @@ def test_evaluate_cli_quotes_numeric_class_labels(monkeypatch, capsys):
 
     evaluate_cli.main()
 
-    assert "Predicted labels: '1'=2, '9'=1" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "Starting Name That Move offline evaluation..." in output
+    assert "\nEvaluation summary\n" in output
+    assert "Predicted labels: '1'=2, '9'=1" in output

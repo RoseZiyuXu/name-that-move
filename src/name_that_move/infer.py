@@ -6,7 +6,6 @@ channel-first shape ``(n_channels, n_timesteps)``.
 
 from __future__ import annotations
 
-import pickle
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -23,63 +22,10 @@ from name_that_move._validation import (
     validate_tag,
 )
 from name_that_move.preprocessing import IMUWindowConfig, validate_windows
-
-
-def load_segment(path: str | Path) -> np.ndarray:
-    """Load a single ``.pkl`` segment file.
-
-    The file may contain either a bare ``np.ndarray`` of shape
-    ``(n_channels, n_timesteps)`` or a sequence whose first element is one.
-
-    Parameters
-    ----------
-    path:
-        Path to the ``.pkl`` file.  Name is not restricted.
-
-    Returns
-    -------
-    ndarray, shape ``(n_channels, n_timesteps)``
-        Loaded numeric window in channel-first format.
-
-    """
-    path = Path(validate_path(path, name="path"))
-    with path.open("rb") as fh:
-        data = pickle.load(fh)
-
-    if not isinstance(data, np.ndarray):
-        try:
-            data = data[0]
-        except (IndexError, KeyError, TypeError) as error:
-            raise ValueError(
-                "segment file must contain an array or a sequence whose first "
-                "item is an array"
-            ) from error
-
-    batch = validate_windows(data)
-    if len(batch) != 1:
-        raise ValueError("segment file must contain exactly one window")
-    return batch[0]
-
-
-def load_segments_batch(path: str | Path) -> np.ndarray:
-    """Load a ``.pkl`` file that already contains a batch of segments.
-
-    Parameters
-    ----------
-    path:
-        Path to the ``.pkl`` file.  Name is not restricted.
-
-    Returns
-    -------
-    ndarray, shape ``(N, n_channels, n_timesteps)``
-        Loaded windows as a contiguous ``float32`` batch.
-
-    """
-    path = Path(validate_path(path, name="path"))
-    with path.open("rb") as fh:
-        data = pickle.load(fh)
-
-    return validate_windows(data)
+from name_that_move.window_io import (
+    load_segment as load_segment,
+    load_segments_batch as load_segments_batch,
+)
 
 
 def load_model(

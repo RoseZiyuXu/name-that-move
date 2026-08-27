@@ -71,10 +71,15 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     """Validate configuration, then run live inference until Control-C."""
     args = build_parser().parse_args()
+    print("\nStarting Name That Move live inference...", flush=True)
     config = IMUWindowConfig(
         sample_rate_hz=args.sample_rate,
         window_duration_s=args.window_duration,
     )
+    if args.model_dir is not None:
+        print("\nLoading local model...", flush=True)
+    else:
+        print("\nPreparing remote HTTP model client...", flush=True)
     try:
         predictor = build_predictor(
             model_dir=args.model_dir,
@@ -86,6 +91,10 @@ def main() -> None:
         )
     except (FileNotFoundError, ValueError) as error:
         raise SystemExit(f"Error: {error}") from None
+    if args.model_dir is not None:
+        print("Local model ready.", flush=True)
+    else:
+        print("Remote HTTP model client ready.", flush=True)
     touchdesigner = None
     if args.touchdesigner_port is not None:
         touchdesigner = TouchDesignerClient(
@@ -100,14 +109,15 @@ def main() -> None:
     ) -> None:
         print(
             f"Prediction: {result.label} | confidence: "
-            f"{result.confidence:.3f}"
+            f"{result.confidence:.3f}",
+            flush=True,
         )
         if touchdesigner is not None:
             touchdesigner.send(result, window)
 
     def report_error(error: Exception, window: CompletedWindow) -> None:
         del window
-        print(f"Inference error: {error}")
+        print(f"Inference error: {error}", flush=True)
 
     worker = InferenceWorker(
         predictor.predict,
@@ -124,12 +134,19 @@ def main() -> None:
     )
 
     mode_name = "local" if args.model_dir is not None else "remote"
-    print(f"Inference mode: {mode_name}")
-    print(f"Listening on {args.ip}:{args.port} for IMU {args.imu_id}")
-    print("Expected OSC addresses:")
+    print("\nStarting OSC receiver...", flush=True)
+    print("\nLive inference configuration")
+    print(f"  Mode: {mode_name}")
+    print(f"  Listening on: {args.ip}:{args.port}")
+    print(f"  IMU ID: {args.imu_id}")
+    print("\nExpected OSC addresses")
     for channel, path in osc_channel_paths(args.imu_id).items():
         print(f"  {channel}: {path}")
-    print("Waiting until all six channels have arrived; press Control-C to stop.")
+    print(
+        "\nWaiting until all six channels have arrived. "
+        "Press Control-C to stop.",
+        flush=True,
+    )
     try:
         pipeline.run_forever()
     except TimeoutError as error:

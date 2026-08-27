@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from name_that_move.preprocessing import DEFAULT_IMU_CONFIG, IMUWindowConfig
-from name_that_move.realtime.local_model import LocalModelPredictor
 from name_that_move.realtime.remote_client import RemoteModelClient
+
+if TYPE_CHECKING:
+    from name_that_move.realtime.local_model import LocalModelPredictor
 
 
 def build_predictor(
@@ -56,6 +58,8 @@ def build_predictor(
             "be used together."
         )
     if model_dir is not None:
+        from name_that_move.realtime.local_model import LocalModelPredictor
+
         return LocalModelPredictor(
             model_dir,
             tag=tag,

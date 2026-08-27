@@ -8,6 +8,13 @@ Shared preprocessing
    :members:
    :show-inheritance:
 
+Saved-window loading
+--------------------
+
+.. automodule:: name_that_move.window_io
+   :members:
+   :show-inheritance:
+
 Offline data preparation
 ------------------------
 

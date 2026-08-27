@@ -42,10 +42,18 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     """Evaluate the selected session and print a compact summary."""
     args = build_parser().parse_args()
+    print("\nStarting Name That Move offline evaluation...", flush=True)
     config = IMUWindowConfig(
         sample_rate_hz=args.sample_rate,
         window_duration_s=args.window_duration,
     )
+    if args.model_dir is not None:
+        print("\nLoading recorded session and local model...", flush=True)
+    else:
+        print(
+            "\nLoading recorded session and preparing remote HTTP inference...",
+            flush=True,
+        )
     try:
         result = evaluate_session(
             args.session_dir,
@@ -62,14 +70,15 @@ def main() -> None:
     counts = ", ".join(
         f"'{label}'={count}" for label, count in sorted(result.label_counts.items())
     )
-    print(f"Session: {result.session_dir}")
-    print(f"Windows: {result.n_windows}")
-    print(f"Predicted labels: {counts}")
-    print(f"Mean confidence: {result.mean_confidence:.3f}")
+    print("\nEvaluation summary")
+    print(f"  Session: {result.session_dir}")
+    print(f"  Windows: {result.n_windows}")
+    print(f"  Predicted labels: {counts}")
+    print(f"  Mean confidence: {result.mean_confidence:.3f}")
     if result.accuracy is not None:
         correct = round(result.accuracy * result.n_windows)
         print(
-            f"Accuracy for expected label '{result.expected_label}': "
+            f"  Accuracy for expected label '{result.expected_label}': "
             f"{correct}/{result.n_windows} ({result.accuracy:.1%})"
         )
 

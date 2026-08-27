@@ -62,6 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     """Run a recording session until interrupted with Control-C."""
     args = build_parser().parse_args()
+    print("\nStarting Name That Move recording...", flush=True)
     config = IMUWindowConfig(
         sample_rate_hz=args.sample_rate,
         window_duration_s=args.window_duration,
@@ -81,9 +82,9 @@ def main() -> None:
             f"OSC messages: {diagnostics.osc_message_count} | "
             f"max channel age: {diagnostics.max_channel_age_s:.3f}s"
         )
-        print(message)
+        print(message, flush=True)
         if diagnostics.max_channel_age_s > args.stale_warning:
-            print("Warning: at least one channel may be stale")
+            print("Warning: at least one channel may be stale", flush=True)
 
     pipeline = RealtimePipeline(
         config=config,
@@ -95,12 +96,21 @@ def main() -> None:
         startup_timeout_s=args.startup_timeout,
     )
 
-    print(f"Listening on {args.ip}:{args.port} for IMU {args.imu_id}")
-    print("Expected OSC addresses:")
+    print("\nStarting OSC receiver...", flush=True)
+    print("\nRecording configuration")
+    print(f"  Label: {args.label}")
+    print(f"  Session: {args.session}")
+    print(f"  Listening on: {args.ip}:{args.port}")
+    print(f"  IMU ID: {args.imu_id}")
+    print(f"  Saving to: {recorder.recording_dir}")
+    print("\nExpected OSC addresses")
     for channel, path in osc_channel_paths(args.imu_id).items():
         print(f"  {channel}: {path}")
-    print(f"Saving to: {recorder.recording_dir}")
-    print("Waiting until all six channels have arrived; press Control-C to stop.")
+    print(
+        "\nWaiting until all six channels have arrived. "
+        "Press Control-C to stop.",
+        flush=True,
+    )
     try:
         pipeline.run_forever()
     except TimeoutError as error:
