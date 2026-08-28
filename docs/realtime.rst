@@ -14,6 +14,13 @@ operations:
                                              ├── InferenceWorker
                                              └── TouchDesigner callback
 
+OSC is the current stable acquisition adapter. Planned direct BLE support will
+replace only that first adapter: it will decode sensor packets into the same
+named six-channel values and then reuse the existing window buffer and every
+downstream component. The BLE option will therefore complement, not replace,
+the phone-to-OSC workflow. See :doc:`hardware_setup` for the practical
+tradeoffs.
+
 Sampling immediately continues after a window is completed. Saving and
 inference use independent bounded worker queues, so disk or network latency
 does not pause sampling or create unlimited backlog.

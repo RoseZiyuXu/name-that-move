@@ -1,8 +1,8 @@
 Hardware and data flow
 ======================
 
-Reference setup
----------------
+Supported OSC setup
+-------------------
 
 The current tested workflow uses:
 
@@ -28,6 +28,48 @@ The data path is:
 The phone is the OSC sender. Configure Holonist with the computer's local IP
 address and the same UDP port that Name That Move will receive. The default
 package port is ``10000``. Both devices must be on the same Wi-Fi network.
+
+Acquisition choices
+-------------------
+
+Name That Move keeps sensor acquisition separate from window construction,
+recording, and inference. The stable release currently supports the
+phone-to-OSC path above. A direct Movesense-to-laptop BLE adapter is under
+development and will be offered as an additional choice rather than replacing
+OSC.
+
+.. list-table:: OSC bridge and direct BLE at a glance
+   :header-rows: 1
+   :widths: 18 38 38
+
+   * - Transport
+     - Advantages
+     - Tradeoffs
+   * - Phone + OSC
+     - Uses the tested performance workflow; keeps the Bluetooth connection
+       close to a performer; Wi-Fi can cover a larger stage-to-computer
+       distance; and works with tools such as TouchDesigner.
+     - Requires a phone, a compatible bridge app, shared Wi-Fi, and matching
+       IP address, port, IMU ID, and OSC paths.
+   * - Direct BLE
+     - Removes the phone and Wi-Fi bridge; reduces setup steps; and lets the
+       package receive sensor measurements directly on the laptop.
+     - Requires compatible sensor firmware and a laptop BLE connection; has a
+       shorter practical range; and is not yet part of the stable release.
+
+Both choices will converge on the same six-channel sample interface and the
+same :doc:`data_contract`. The selected transport must not change channel
+names, order, units, sampling configuration, or model compatibility. After
+acquisition, both paths reuse the same window buffer, background recorder,
+local or remote inference worker, and optional TouchDesigner output.
+
+.. code-block:: text
+
+   Movesense ── BLE ──> phone + OSC ──┐
+                                      ├──> shared IMU samples and windows
+   Movesense ── direct BLE ───────────┘       ├── recording
+                                              ├── local/remote inference
+                                              └── TouchDesigner output
 
 Expected OSC addresses
 ----------------------
@@ -65,5 +107,5 @@ Alternative hardware
 
 Users may replace the Movesense/Holonist bridge with another sensor or data
 transport. It must ultimately provide the six named channels and satisfy the
-same data contract. Direct Movesense-to-laptop BLE support is future work and
-is not required for the current workflow.
+same data contract. Direct Movesense-to-laptop BLE support is optional future
+work and is not required for the current OSC workflow.
