@@ -89,6 +89,5 @@ Credit and licensing records
 ----------------------------
 
 Project roles and institutional acknowledgements are recorded in
-:download:`CONTRIBUTORS.md <../CONTRIBUTORS.md>`. Dependency attribution and
-license notes are recorded in
+:doc:`contributors`. Dependency attribution and license notes are recorded in
 :download:`THIRD_PARTY_LICENSES.md <../THIRD_PARTY_LICENSES.md>`.

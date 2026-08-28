@@ -271,6 +271,17 @@ Media (DXARTS).
 Third-party software and license information are documented in
 [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
 
+## Contributing and future work
+
+Bug reports, documentation improvements, tested examples, and focused code
+contributions are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for issue,
+development, testing, data-privacy, and pull-request guidance.
+
+Planned and exploratory work—including direct BLE acquisition, a public
+example dataset, release automation, and performance-system integrations—is
+tracked in [`ROADMAP.md`](ROADMAP.md). Roadmap items are development ideas, not
+commitments to a particular release.
+
 ## License
 
 [MIT](LICENSE)

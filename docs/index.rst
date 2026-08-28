@@ -40,5 +40,13 @@ model-ready data contract.
    :caption: Reference
 
    citing
+   contributors
    api
    development
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contributing and future work
+
+   contributing
+   roadmap

@@ -14,11 +14,14 @@ version = "0.1"
 release = "0.1.0"
 
 extensions = [
+    "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
 ]
+
+myst_heading_anchors = 3
 
 autosummary_generate = True
 autodoc_typehints = "description"
