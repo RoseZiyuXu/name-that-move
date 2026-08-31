@@ -7,6 +7,8 @@ reference model:
   IMU windows for `still`, `triangle`, and `circle`
 - [`models/still_triangle_circle/`](models/still_triangle_circle/): the matching
   ready-to-use model with tag `still_triangle_circle_v0`
+- [`touchdesigner/`](touchdesigner/): a downstream creative-coding patch that
+  receives predictions, filters confidence, and visualizes accepted labels
 
 From the repository root, retrain and validate a fresh model with:
 

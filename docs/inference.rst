@@ -142,3 +142,10 @@ TouchDesigner receives the label at ``/sensor/1/label`` and confidence at
 port 8000 is the separate package-to-TouchDesigner output. OSC sampling
 continues in its own thread while model inference and downstream output run
 through the bounded inference worker.
+
+The repository includes a ready-to-open
+:download:`TouchDesigner visualizer <../examples/touchdesigner/name_that_move_visualizer.toe>`
+and its :download:`setup notes <../examples/touchdesigner/README.md>`. The patch
+demonstrates confidence smoothing and thresholding, then maps ``still``,
+``triangle``, and ``circle`` predictions to simple visuals that users can
+replace with their own audiovisual or performance controls.

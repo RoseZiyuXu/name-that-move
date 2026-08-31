@@ -5,6 +5,12 @@ from name_that_move import load_segment
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DATASET = REPOSITORY_ROOT / "examples" / "data" / "still_triangle_circle"
 MODEL = REPOSITORY_ROOT / "examples" / "models" / "still_triangle_circle"
+TOUCHDESIGNER_EXAMPLE = (
+    REPOSITORY_ROOT
+    / "examples"
+    / "touchdesigner"
+    / "name_that_move_visualizer.toe"
+)
 SESSIONS = {
     "still1",
     "still2",
@@ -34,3 +40,8 @@ def test_public_example_model_contains_complete_artifact_set():
         f"input_shape-{TAG}.pt",
     }
     assert expected.issubset({path.name for path in MODEL.iterdir()})
+
+
+def test_public_touchdesigner_example_is_present():
+    assert TOUCHDESIGNER_EXAMPLE.is_file()
+    assert TOUCHDESIGNER_EXAMPLE.stat().st_size > 0
