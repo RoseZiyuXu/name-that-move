@@ -92,7 +92,24 @@ class OSCReceiver:
         self._server = None
         self._thread = None
 
-    def _handle_message(self, address: str, channel: str, *args: Any) -> None:
+    def _handle_message(
+        self,
+        address: str,
+        mapped_channel: Any,
+        *args: Any,
+    ) -> None:
+        del address
+        # python-osc passes Dispatcher.map() arguments to handlers as a list.
+        # Older versions and simple test doubles may pass the value directly,
+        # so accept both forms while still requiring exactly one channel name.
+        if isinstance(mapped_channel, (list, tuple)):
+            if len(mapped_channel) != 1:
+                return
+            channel = mapped_channel[0]
+        else:
+            channel = mapped_channel
+        if not isinstance(channel, str):
+            return
         if len(args) != 1:
             return
         try:

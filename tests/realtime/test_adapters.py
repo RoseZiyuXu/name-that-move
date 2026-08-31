@@ -4,7 +4,11 @@ import numpy as np
 import pytest
 import requests
 
-from name_that_move.realtime.osc_receiver import DEFAULT_IMU_ID, osc_channel_paths
+from name_that_move.realtime.osc_receiver import (
+    DEFAULT_IMU_ID,
+    OSCReceiver,
+    osc_channel_paths,
+)
 from name_that_move.realtime.remote_client import (
     RemoteInferenceError,
     RemoteModelClient,
@@ -64,6 +68,30 @@ def test_default_imu_id_is_one():
     assert DEFAULT_IMU_ID == 1
     assert paths["acc_x"] == "/m/1/acc/x"
     assert paths["gyro_z"] == "/m/1/gyro/z"
+
+
+def test_osc_receiver_unwraps_pythonosc_mapped_channel_argument():
+    received = []
+    receiver = OSCReceiver(
+        lambda channel, value: received.append((channel, value)),
+        imu_id=7,
+    )
+
+    receiver._handle_message("/m/7/acc/x", ["acc_x"], 0.5)
+
+    assert received == [("acc_x", 0.5)]
+
+
+def test_osc_receiver_accepts_direct_mapped_channel_argument():
+    received = []
+    receiver = OSCReceiver(
+        lambda channel, value: received.append((channel, value)),
+        imu_id=7,
+    )
+
+    receiver._handle_message("/m/7/gyro/z", "gyro_z", -0.25)
+
+    assert received == [("gyro_z", -0.25)]
 
 
 def test_remote_client_uploads_batch_without_temporary_file():
