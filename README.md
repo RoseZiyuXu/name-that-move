@@ -175,7 +175,7 @@ training set, preventing augmented copies from leaking into validation.
 
 For datasets recorded as multiple sessions per class, use
 `make_session_dataset()` to hold out complete sessions instead of randomly
-splitting related windows. The current local example uses Sessions 1–2 for
+splitting related windows. The public example uses Sessions 1–2 for
 training and Session 3 for validation:
 
 - Recording round 1 produced `still1`, `triangle1`, and `circle1`.
@@ -189,13 +189,15 @@ package workflow and transfer to a later recording; it is not yet a
 cross-performer or cross-device benchmark.
 
 ```bash
-python examples/train_example_model.py artifacts/datasets/example_data
+python examples/train_example_model.py
 ```
 
 The script trains `still`, `triangle`, and `circle`, saves three model
 artifacts under `artifacts/models/example_data_smoke/`, reloads them, and runs
-inference on the held-out session. The `artifacts/` directory remains ignored
-until a deliberately public dataset and model are selected for release.
+inference on the held-out session. The deliberately public source data and
+reference model live under `examples/data/still_triangle_circle/` and
+`examples/models/still_triangle_circle/`. Retrained outputs remain Git-ignored
+so they do not overwrite the published reference accidentally.
 
 ## Run inference
 

@@ -12,7 +12,7 @@ Use the same IMU configuration used during training:
 
    config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
    feature_extractor, learner = load_model(
-       "artifacts/models/example_data_smoke",
+       "examples/models/still_triangle_circle",
        tag="still_triangle_circle_v0",
        expected_config=config,
    )
@@ -25,7 +25,8 @@ Predict a recorded window
    from name_that_move import load_segment, predict
 
    window = load_segment(
-       "artifacts/datasets/example_data/circle3/example_window.pkl"
+       "examples/data/still_triangle_circle/circle3/"
+       "imu9_20260824_193911_406.pkl"
    )
    probabilities, labels = predict(
        window,
@@ -40,8 +41,7 @@ Predict a recorded window
 ``predict`` checks incoming windows against the loaded feature extractor.
 Mismatches fail before MiniRocket feature extraction with an actionable error.
 
-The exact filename above is a placeholder. Replace it with a real ``.pkl``
-window present in the selected dataset folder.
+The filename above is one window included in the public example dataset.
 
 Evaluate a later recording session
 ----------------------------------
@@ -54,7 +54,7 @@ folder without starting OSC or performing the movement again:
 
    name-that-move-evaluate \
      --session-dir artifacts/datasets/example_data/circle4 \
-     --model-dir artifacts/models/example_data_smoke \
+     --model-dir examples/models/still_triangle_circle \
      --model-tag still_triangle_circle_v0 \
      --expected-label circle
 
@@ -85,7 +85,7 @@ one inference backend. For the local example model:
 .. code-block:: console
 
    name-that-move-live \
-     --model-dir artifacts/models/example_data_smoke \
+     --model-dir examples/models/still_triangle_circle \
      --model-tag still_triangle_circle_v0
 
 For the existing HTTP model server:
@@ -111,14 +111,27 @@ remote timeout begins only after a window exists and limits one HTTP request.
 Add TouchDesigner output
 ------------------------
 
-Append these options to either command to forward every successful prediction:
+Run the complete public-example command below to receive six-channel IMU input
+on UDP port 10000, classify it locally, and forward every successful prediction
+to TouchDesigner on UDP port 8000:
 
 .. code-block:: console
 
-   --touchdesigner-ip 127.0.0.1 \
-   --touchdesigner-port 8000 \
-   --touchdesigner-path /python
+   name-that-move-live \
+     --model-dir examples/models/still_triangle_circle \
+     --model-tag still_triangle_circle_v0 \
+     --ip 0.0.0.0 \
+     --port 10000 \
+     --imu-id 1 \
+     --sample-rate 48 \
+     --window-duration 2 \
+     --startup-timeout 2 \
+     --touchdesigner-ip 127.0.0.1 \
+     --touchdesigner-port 8000 \
+     --touchdesigner-path /sensor/1
 
-TouchDesigner receives the label at ``/python/label`` and confidence at
-``/python/confidence``. OSC sampling continues in its own thread while model
-inference and downstream output run through the bounded inference worker.
+TouchDesigner receives the label at ``/sensor/1/label`` and confidence at
+``/sensor/1/confidence``. Port 10000 is the sensor/phone-to-package input;
+port 8000 is the separate package-to-TouchDesigner output. OSC sampling
+continues in its own thread while model inference and downstream output run
+through the bounded inference worker.

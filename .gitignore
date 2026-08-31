@@ -12,7 +12,7 @@ dist/
 venv/
 .vscode/
 .ipynb_checkpoints/
-models/
+/models/
 work/
 outputs/
 /artifacts/

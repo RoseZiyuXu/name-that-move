@@ -36,6 +36,7 @@ CLASS_FOLDERS = {
     "circle": ("circle1", "circle2", "circle3"),
 }
 VALIDATION_FOLDERS = {"still3", "triangle3", "circle3"}
+DEFAULT_DATASET = Path(__file__).resolve().parent / "data" / "still_triangle_circle"
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,8 +44,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "dataset",
+        nargs="?",
         type=Path,
-        help="Directory containing still1..3, triangle1..3, and circle1..3",
+        default=DEFAULT_DATASET,
+        help=(
+            "Directory containing still1..3, triangle1..3, and circle1..3 "
+            "(default: the repository's public example dataset)"
+        ),
     )
     parser.add_argument(
         "--output-dir",

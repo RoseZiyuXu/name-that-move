@@ -32,12 +32,12 @@ real time.
 Example dataset layout
 ----------------------
 
-The current local example contains three motion classes and three separately
+The public example contains three motion classes and three separately
 recorded rounds:
 
 .. code-block:: text
 
-   artifacts/datasets/example_data/
+   examples/data/still_triangle_circle/
    ├── still1/       ├── triangle1/       ├── circle1/
    ├── still2/       ├── triangle2/       ├── circle2/
    └── still3/       └── triangle3/       └── circle3/
@@ -54,7 +54,7 @@ Activate the environment and ensure the latest local source has been installed:
 
    conda activate name-that-move
    python -m pip install --no-deps .
-   python examples/train_example_model.py artifacts/datasets/example_data
+   python examples/train_example_model.py
 
 The script:
 
@@ -88,5 +88,7 @@ By default, the script creates:
    └── input_shape-still_triangle_circle_v0.pt
 
 These files contain the MiniRocket feature extractor, exported learner, and
-input metadata. They remain local and Git-ignored until a model is intentionally
-selected for public release.
+input metadata. Retrained files remain local and Git-ignored so the tutorial
+does not overwrite the reviewed public reference model. The ready-to-use model
+is stored at ``examples/models/still_triangle_circle/``; its data card and the
+dataset data card are available beside the published files in the repository.
