@@ -2,7 +2,6 @@ from pathlib import Path
 
 from name_that_move import load_segment
 
-
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DATASET = REPOSITORY_ROOT / "examples" / "data" / "still_triangle_circle"
 MODEL = REPOSITORY_ROOT / "examples" / "models" / "still_triangle_circle"
