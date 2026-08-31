@@ -130,6 +130,13 @@ to TouchDesigner on UDP port 8000:
      --touchdesigner-port 8000 \
      --touchdesigner-path /sensor/1
 
+If another OSC sender uses a different namespace but preserves the six
+``acc/x`` through ``gyro/z`` suffixes, add a custom prefix. For example,
+``--osc-prefix /wearable/right-wrist`` expects
+``/wearable/right-wrist/acc/x`` through
+``/wearable/right-wrist/gyro/z``. When this option is omitted, ``--imu-id 1``
+continues to produce the default ``/m/1/...`` paths.
+
 TouchDesigner receives the label at ``/sensor/1/label`` and confidence at
 ``/sensor/1/confidence``. Port 10000 is the sensor/phone-to-package input;
 port 8000 is the separate package-to-TouchDesigner output. OSC sampling

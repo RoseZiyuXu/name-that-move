@@ -70,6 +70,19 @@ def test_default_imu_id_is_one():
     assert paths["gyro_z"] == "/m/1/gyro/z"
 
 
+def test_osc_paths_accept_custom_prefix():
+    paths = osc_channel_paths(7, prefix="/wearable/right-wrist/")
+
+    assert paths["acc_x"] == "/wearable/right-wrist/acc/x"
+    assert paths["gyro_z"] == "/wearable/right-wrist/gyro/z"
+
+
+@pytest.mark.parametrize("prefix", ["wearable", "/", "/bad prefix"])
+def test_osc_paths_reject_invalid_custom_prefix(prefix):
+    with pytest.raises(ValueError, match="osc_prefix"):
+        osc_channel_paths(7, prefix=prefix)
+
+
 def test_osc_receiver_unwraps_pythonosc_mapped_channel_argument():
     received = []
     receiver = OSCReceiver(

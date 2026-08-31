@@ -85,9 +85,13 @@ For the default Movesense ID ``1``, the receiver expects:
    /m/1/gyro/y
    /m/1/gyro/z
 
-The IMU ID and receiving port are configurable. TouchDesigner can inspect
-incoming OSC before recording. Close any application already using the chosen
-UDP port before starting the package receiver.
+The IMU ID and receiving port are configurable. Another sender app may replace
+the leading ``/m/1`` namespace with ``--osc-prefix``; for example,
+``--osc-prefix /wearable/right-wrist`` produces
+``/wearable/right-wrist/acc/x`` through
+``/wearable/right-wrist/gyro/z``. The six suffixes remain fixed. TouchDesigner
+can inspect incoming OSC before recording. Close any application already using
+the chosen UDP port before starting the package receiver.
 
 Sampling interpretation
 -----------------------

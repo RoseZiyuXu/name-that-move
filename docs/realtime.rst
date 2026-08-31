@@ -47,6 +47,12 @@ Both live modes fail fast if a complete set of six OSC channels does not arrive
 within the configurable startup timeout. This prevents an unnoticed connection
 or port mismatch from leaving the program waiting indefinitely.
 
+The OSC sender namespace is configurable with ``osc_prefix`` or
+``--osc-prefix``. This changes the leading portion of every address while the
+six endings—``acc/x``, ``acc/y``, ``acc/z``, ``gyro/x``, ``gyro/y``, and
+``gyro/z``—remain fixed so that the window buffer receives an unambiguous
+channel order.
+
 Configuration rule
 ------------------
 

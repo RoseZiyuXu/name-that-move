@@ -1,4 +1,10 @@
-"""OSC input adapter for Movesense IMU channel messages."""
+"""OSC input adapter with a configurable prefix and fixed IMU suffixes.
+
+The adapter treats six semantic channel endings—``acc/x``, ``acc/y``,
+``acc/z``, ``gyro/x``, ``gyro/y``, and ``gyro/z``—as its acquisition contract.
+The leading OSC namespace is configurable for compatibility with different
+sender applications.
+"""
 
 from __future__ import annotations
 
@@ -21,17 +27,58 @@ DEFAULT_OSC_PORT = 10000
 DEFAULT_IMU_ID = 1
 
 
-def osc_channel_paths(imu_id: int) -> dict[str, str]:
-    """Return the expected OSC address for every six-axis IMU channel."""
+def validate_osc_prefix(prefix: str) -> str:
+    """Validate and remove a trailing slash from an OSC address prefix."""
+    if not isinstance(prefix, str):
+        raise TypeError("osc_prefix must be a string")
+    normalized = prefix.rstrip("/")
+    if not normalized or not normalized.startswith("/"):
+        raise ValueError("osc_prefix must start with '/' and contain a name")
+    if any(character.isspace() for character in normalized):
+        raise ValueError("osc_prefix must not contain whitespace")
+    return normalized
+
+
+def osc_channel_paths(
+    imu_id: int,
+    *,
+    prefix: str | None = None,
+) -> dict[str, str]:
+    """Return the expected OSC address for every six-axis IMU channel.
+
+    When ``prefix`` is omitted, paths use the existing ``/m/<imu_id>`` phone
+    convention. A custom prefix changes only that namespace; the six semantic
+    channel suffixes remain part of the package data contract.
+
+    Parameters
+    ----------
+    imu_id:
+        Sensor identifier used to construct the default ``/m/<imu_id>``
+        prefix. It remains required metadata when a custom prefix is supplied.
+    prefix:
+        Optional namespace beginning with ``/``, for example
+        ``/wearable/right-wrist``. A trailing slash is removed.
+
+    Returns
+    -------
+    dict
+        Package channel names mapped to their complete OSC addresses.
+    """
     imu_id = validate_positive_int(imu_id, name="imu_id")
+    base_path = f"/m/{imu_id}" if prefix is None else validate_osc_prefix(prefix)
     return {
-        channel: f"/m/{imu_id}/{suffix}"
+        channel: f"{base_path}/{suffix}"
         for channel, suffix in OSC_CHANNEL_SUFFIXES.items()
     }
 
 
 class OSCReceiver:
-    """Receive named OSC values on a background UDP server."""
+    """Receive six named IMU values on a background UDP server.
+
+    The default namespace is ``/m/<imu_id>``. ``osc_prefix`` may replace that
+    leading namespace, but the receiver still appends and requires the six
+    ``acc|gyro`` and ``x|y|z`` suffixes defined by :data:`OSC_CHANNEL_SUFFIXES`.
+    """
 
     def __init__(
         self,
@@ -40,21 +87,25 @@ class OSCReceiver:
         ip: str = DEFAULT_OSC_IP,
         port: int = DEFAULT_OSC_PORT,
         imu_id: int = DEFAULT_IMU_ID,
+        osc_prefix: str | None = None,
     ) -> None:
-        """Configure an OSC receiver without opening the network port yet."""
+        """Configure the port, sensor metadata, and optional OSC prefix."""
         if not callable(on_value):
             raise TypeError("on_value must be callable")
         self.on_value = on_value
         self.ip = ip
         self.port = validate_positive_int(port, name="port")
         self.imu_id = validate_positive_int(imu_id, name="imu_id")
+        self.osc_prefix = (
+            None if osc_prefix is None else validate_osc_prefix(osc_prefix)
+        )
         self._server: Any = None
         self._thread: Thread | None = None
 
     @property
     def channel_paths(self) -> dict[str, str]:
         """Expected OSC addresses keyed by package channel name."""
-        return osc_channel_paths(self.imu_id)
+        return osc_channel_paths(self.imu_id, prefix=self.osc_prefix)
 
     def start(self) -> None:
         """Start receiving OSC messages in a background thread."""

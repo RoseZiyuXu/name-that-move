@@ -26,7 +26,12 @@ LOGGER = logging.getLogger(__name__)
 
 
 class RealtimePipeline:
-    """Combine OSC acquisition, fixed-rate sampling, saving, and inference."""
+    """Combine OSC acquisition, fixed-rate sampling, saving, and inference.
+
+    ``osc_prefix`` changes the sender-specific namespace before the fixed six
+    ``acc|gyro`` and ``x|y|z`` OSC suffixes. When it is omitted, ``imu_id``
+    selects the backward-compatible ``/m/<imu_id>`` namespace.
+    """
 
     def __init__(
         self,
@@ -35,12 +40,13 @@ class RealtimePipeline:
         ip: str = DEFAULT_OSC_IP,
         port: int = DEFAULT_OSC_PORT,
         imu_id: int = DEFAULT_IMU_ID,
+        osc_prefix: str | None = None,
         recorder: AsyncWindowRecorder | None = None,
         inference_worker: InferenceWorker | None = None,
         on_window: Callable[[CompletedWindow], None] | None = None,
         startup_timeout_s: float | None = 2.0,
     ) -> None:
-        """Configure a pipeline without starting its network or worker loop."""
+        """Configure workers and OSC addressing without opening the port."""
         if recorder is not None and recorder.config != config:
             raise ValueError(
                 "Recorder configuration must match pipeline configuration. "
@@ -60,6 +66,7 @@ class RealtimePipeline:
             ip=ip,
             port=port,
             imu_id=imu_id,
+            osc_prefix=osc_prefix,
         )
         self.recorder = recorder
         self.inference_worker = inference_worker

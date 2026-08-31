@@ -77,3 +77,16 @@ def test_live_cli_defaults_to_two_second_timeouts():
 
     assert args.http_timeout == 2.0
     assert args.startup_timeout == 2.0
+
+
+def test_live_cli_accepts_custom_osc_prefix():
+    args = build_live_parser().parse_args(
+        [
+            "--remote-url",
+            "https://model.test/process",
+            "--osc-prefix",
+            "/wearable/right-wrist",
+        ]
+    )
+
+    assert args.osc_prefix == "/wearable/right-wrist"

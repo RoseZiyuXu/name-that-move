@@ -42,6 +42,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--imu-id", type=int, default=DEFAULT_IMU_ID, help="Movesense OSC ID"
     )
+    parser.add_argument(
+        "--osc-prefix",
+        help=(
+            "Custom OSC address prefix, such as /wearable/right-wrist; "
+            "defaults to /m/<imu-id>"
+        ),
+    )
     parser.add_argument("--sample-rate", type=float, default=48.0)
     parser.add_argument("--window-duration", type=float, default=2.0)
     parser.add_argument(
@@ -91,6 +98,7 @@ def main() -> None:
         ip=args.ip,
         port=args.port,
         imu_id=args.imu_id,
+        osc_prefix=args.osc_prefix,
         recorder=recorder,
         on_window=report_window,
         startup_timeout_s=args.startup_timeout,
@@ -102,9 +110,14 @@ def main() -> None:
     print(f"  Session: {args.session}")
     print(f"  Listening on: {args.ip}:{args.port}")
     print(f"  IMU ID: {args.imu_id}")
+    resolved_prefix = args.osc_prefix or f"/m/{args.imu_id}"
+    print(f"  OSC prefix: {resolved_prefix}")
     print(f"  Saving to: {recorder.recording_dir}")
     print("\nExpected OSC addresses")
-    for channel, path in osc_channel_paths(args.imu_id).items():
+    for channel, path in osc_channel_paths(
+        args.imu_id,
+        prefix=args.osc_prefix,
+    ).items():
         print(f"  {channel}: {path}")
     print(
         "\nWaiting until all six channels have arrived. "

@@ -77,7 +77,13 @@ model-input contract above.
    * - ``imu_id``
      - ``1``
      - ``--imu-id`` or real-time Python API
-     - Must match the ID embedded in the phone's OSC address paths.
+     - Selects the default ``/m/<imu_id>`` prefix and remains recording
+       metadata even when a custom prefix is used.
+   * - OSC address ``prefix``
+     - ``/m/<imu_id>``
+     - ``--osc-prefix`` or real-time Python API
+     - Replaces the first portion of every OSC path for another sender app.
+       The six ``acc/x`` through ``gyro/z`` suffixes remain fixed.
    * - OSC input ``port``
      - ``10000``
      - ``--port`` or real-time Python API
@@ -116,7 +122,15 @@ For example, only include options that differ from the defaults:
      --label circle \
      --session participant01_round01 \
      --imu-id 1 \
+     --osc-prefix /wearable/right-wrist \
      --port 10000
+
+The command above expects ``/wearable/right-wrist/acc/x`` through
+``/wearable/right-wrist/gyro/z``. Without ``--osc-prefix``, the same IMU ID
+expects the existing ``/m/1/...`` convention. A fully arbitrary six-address
+mapping is intentionally not part of the current interface; preserving the
+suffixes keeps channel meaning and ordering explicit across recording,
+training, and inference.
 
 Flexible workflow choices
 -------------------------
@@ -139,10 +153,11 @@ Current fixed conventions and limitations
 * Model-ready arrays are channel-first: one window is
   ``(n_channels, n_timesteps)`` and a batch is
   ``(n_windows, n_channels, n_timesteps)``.
-* The current Movesense OSC adapter expects the six named accelerometer and
-  gyroscope paths shown in :doc:`hardware_setup`. Offline preprocessing can use
-  another channel configuration, but the OSC adapter must be extended before
-  it can receive different paths or additional sensors.
+* The OSC prefix is configurable, but the current adapter expects the six
+  named ``acc/x``, ``acc/y``, ``acc/z``, ``gyro/x``, ``gyro/y``, and
+  ``gyro/z`` suffixes. Offline preprocessing can use another channel
+  configuration, but the OSC adapter must be extended before it can receive
+  different suffixes or additional channels.
 * The reference model uses MiniRocket features plus a linear classifier.
 * Direct sensor-to-laptop BLE is not yet included.
 

@@ -25,6 +25,14 @@ def test_pipeline_rejects_invalid_startup_timeout():
         RealtimePipeline(startup_timeout_s=0)
 
 
+def test_pipeline_passes_custom_osc_prefix_to_receiver():
+    pipeline = RealtimePipeline(imu_id=7, osc_prefix="/wearable/right-wrist")
+
+    assert pipeline.receiver.channel_paths["acc_x"] == (
+        "/wearable/right-wrist/acc/x"
+    )
+
+
 def test_pipeline_stops_when_no_complete_osc_input_arrives(monkeypatch):
     pipeline = RealtimePipeline(startup_timeout_s=0.01)
     monkeypatch.setattr(pipeline.receiver, "start", lambda: None)

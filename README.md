@@ -114,6 +114,11 @@ Configure the phone to send to the computer's local-network IP on port
 /m/1/gyro/z
 ```
 
+For a different sender namespace, add an OSC prefix while preserving the six
+channel suffixes. For example, ``--osc-prefix /wearable/right-wrist`` expects
+``/wearable/right-wrist/acc/x`` through
+``/wearable/right-wrist/gyro/z``.
+
 Generated files are stored under
 `artifacts/recordings/<label>/<session>/`. Each `.pkl` contains a `(6, 96)`
 window; the matching `.json` records the configuration and lightweight
