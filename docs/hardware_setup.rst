@@ -1,13 +1,42 @@
 Hardware and data flow
 ======================
 
+Name That Move does not require a particular sensor brand, phone, or OSC app.
+It operates on the six-channel :doc:`data_contract`, so users may replace any
+acquisition component that can produce compatible data.
+
+What six-axis IMU data look like
+--------------------------------
+
+A six-axis IMU combines two complementary types of movement measurement. The
+three accelerometer channels describe motion and gravity-related changes along
+the x, y, and z axes, while the three gyroscope channels describe rotation
+around those axes. Together, they produce a six-channel time series that
+captures multiple physical aspects of movement. In the example below, a
+performer repeatedly traces the same triangular movement. Each colored span is
+one complete repetition, and the six stacked curves show how that single
+movement appears across all six IMU channels.
+
+.. figure:: _static/six_axis_triangle_repetitions.png
+   :alt: Six stacked IMU signal plots showing accelerometer and gyroscope data segmented into fifty triangular-movement repetitions.
+   :width: 100%
+   :align: center
+
+   Example six-channel IMU recording from an early triangular-movement study.
+   The top three rows show accelerometer channels (``acc_x``, ``acc_y``, and
+   ``acc_z``, in g); the bottom three show gyroscope channels (``gyro_x``,
+   ``gyro_y``, and ``gyro_z``, in degrees per second). Raw signals are shown in
+   gray. Colored traces and dashed boundaries show 50 segmented repetitions of
+   a triangular movement. This historical research figure illustrates the
+   six-channel representation and is separate from the bundled Name That Move
+   tutorial dataset. Visualization by Ziyu Xu (Rose Xu), originally presented
+   as part of a collaborative research poster. Copyright Ziyu Xu (Rose Xu),
+   used with permission, and not covered by the package's MIT license.
+
 Tested reference OSC setup
 --------------------------
 
-Name That Move does not require a particular sensor brand, phone, or OSC app.
-It operates on the six-channel :doc:`data_contract`, so users may replace any
-acquisition component that can produce compatible data. The reference setup
-tested for this project uses:
+The reference setup tested for this project uses:
 
 * a six-axis IMU sensor (Movesense Sport);
 * a phone running a BLE-to-OSC data-transmitter app (Holon.ist on iPhone);
