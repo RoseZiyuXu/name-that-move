@@ -49,3 +49,19 @@ table.inference-modes-table td {
   vertical-align: middle;
   white-space: normal;
 }
+
+.video-embed {
+  aspect-ratio: 16 / 9;
+  margin: 1rem 0 1.5rem;
+  width: 100%;
+}
+
+.video-link {
+  margin-bottom: 0;
+}
+
+.video-embed iframe {
+  border: 0;
+  height: 100%;
+  width: 100%;
+}

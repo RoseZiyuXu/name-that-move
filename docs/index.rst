@@ -6,6 +6,8 @@ performance — powered by MiniRocket.**
 
 Name That Move supports a path from six-axis IMU recordings to offline model
 training, saved-model inference, and reusable real-time performance components.
+The tutorials follow that path from recording your own movement data, through
+training and inference, to building a creative application with the results.
 
 This documentation describes the hardware and OSC workflow used by the
 project. Other sensors and transports can be used when they produce the same

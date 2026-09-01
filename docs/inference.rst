@@ -174,40 +174,5 @@ window through the Python API:
    print(probabilities[0])
 
 ``load_model`` and ``predict`` reject incompatible metadata or window shapes
-before MiniRocket feature extraction.
-
-Send live results to TouchDesigner
-----------------------------------
-
-TouchDesigner is an optional destination for either live inference backend.
-This complete local-model example receives six-channel IMU input on UDP port
-10000, classifies it, and sends every successful prediction to TouchDesigner
-on UDP port 8000:
-
-.. code-block:: console
-
-   name-that-move-live \
-     --model-dir examples/models/still_triangle_circle \
-     --model-tag still_triangle_circle_v0 \
-     --ip 0.0.0.0 \
-     --port 10000 \
-     --imu-id 1 \
-     --sample-rate 48 \
-     --window-duration 2 \
-     --startup-timeout 2 \
-     --touchdesigner-ip 127.0.0.1 \
-     --touchdesigner-port 8000 \
-     --touchdesigner-path /sensor/1
-
-TouchDesigner receives the label at ``/sensor/1/label`` and confidence at
-``/sensor/1/confidence``. Port 10000 is the sensor-data input; port 8000 is the
-separate prediction output. To use a remote model instead, replace
-``--model-dir`` and ``--model-tag`` with ``--remote-url`` and, optionally,
-``--http-timeout``.
-
-The repository includes a ready-to-open
-:download:`TouchDesigner visualizer <../examples/touchdesigner/name_that_move_visualizer.toe>`
-and its :download:`setup notes <../examples/touchdesigner/README.md>`. The patch
-demonstrates confidence smoothing and thresholding, then maps ``still``,
-``triangle``, and ``circle`` predictions to simple visuals that users can
-replace with their own audiovisual or performance controls.
+before MiniRocket feature extraction. To connect live predictions to
+TouchDesigner or another creative system, continue to :doc:`realtime`.

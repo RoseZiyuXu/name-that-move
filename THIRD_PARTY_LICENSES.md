@@ -1,9 +1,28 @@
-# Third-Party Software Notices
+# Third-Party Notices
 
 Name That Move is licensed under the MIT License. It depends on
 third-party software that remains subject to its own license terms. Installing
 this package may install those dependencies separately; their licenses are not
 replaced by the MIT License used for this repository.
+
+## Published research figures
+
+The documentation reproduces two published research figures under their own
+license terms:
+
+- `docs/_static/human_machine_ritual_figure3.jpg` reproduces Figure 3 from
+  Zhuodi Cai, Ziyu Xu, and Juan Pampin, *Human-Machine Ritual: Synergic
+  Performance through Real-Time Motion Recognition* (2025),
+  [arXiv:2511.02351](https://arxiv.org/abs/2511.02351).
+- `docs/_static/creativity_generativity_figure2.jpeg` reproduces Figure 2 from
+  Ziyu Xu and Zhuodi Cai, *Creativity ≠ Generativity: A Case Study of Attentive
+  Machine Learning in Dance Performance* (2026),
+  [DOI:10.1145/3816094](https://doi.org/10.1145/3816094).
+
+Both figures are distributed under
+[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/), not
+under the repository's MIT License. Reuse must follow the attribution,
+noncommercial-use, and no-derivatives requirements of that license.
 
 ## Audited runtime dependencies
 
