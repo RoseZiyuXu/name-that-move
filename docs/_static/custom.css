@@ -1,0 +1,67 @@
+.image-provenance {
+  color: #6b7280;
+  font-size: 0.88em;
+  font-style: normal;
+  line-height: 1.5;
+  margin: -0.35em 1.5em 1.5em;
+}
+
+.image-provenance p {
+  margin-bottom: 0;
+}
+
+.acquisition-table-intro {
+  margin-bottom: 10px;
+}
+
+table.acquisition-comparison {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.acquisition-comparison th,
+table.acquisition-comparison td {
+  overflow-wrap: break-word;
+  vertical-align: top;
+  white-space: normal;
+}
+
+table.configuration-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.configuration-table th,
+table.configuration-table td {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  white-space: normal;
+}
+
+table.inference-modes-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.inference-modes-table th,
+table.inference-modes-table td {
+  text-align: center;
+  vertical-align: middle;
+  white-space: normal;
+}
+
+.video-embed {
+  aspect-ratio: 16 / 9;
+  margin: 1rem 0 1.5rem;
+  width: 100%;
+}
+
+.video-link {
+  margin-bottom: 0;
+}
+
+.video-embed iframe {
+  border: 0;
+  height: 100%;
+  width: 100%;
+}

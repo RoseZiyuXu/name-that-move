@@ -3,16 +3,34 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "motion-clf"
+name = "name-that-move"
 version = "0.1.0"
-description = "Time-series motion classification using MiniRocket"
+description = "IMU-based motion classification for dance and interactive performance"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
+keywords = [
+    "imu",
+    "motion-classification",
+    "minirocket",
+    "time-series",
+    "dance",
+    "choreography",
+    "interactive-performance",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 dependencies = [
-    "numpy==1.26.4",
+    "numpy>=1.26,<2",
     "torch",
     "tsai",
+    "fastcore>=1.8,<2",
+    "fastprogress>=1,<1.1",
     "tsaug",
     "scikit-learn",
     "sktime",
@@ -20,7 +38,49 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ipykernel", "jupyter"]
+realtime = ["python-osc>=1.9"]
+remote = ["requests>=2.31"]
+docs = [
+    "myst-parser>=4",
+    "sphinx>=8",
+    "sphinx-rtd-theme>=3",
+]
+dev = [
+    "pytest",
+    "ruff==0.16.0",
+    "build",
+    "ipykernel",
+    "jupyter",
+    "python-osc>=1.9",
+    "requests>=2.31",
+]
+
+[project.scripts]
+name-that-move-evaluate = "name_that_move.offline.evaluate_cli:main"
+name-that-move-live = "name_that_move.realtime.infer_cli:main"
+name-that-move-record = "name_that_move.realtime.cli:main"
+name-that-move-train = "name_that_move.offline.train_cli:main"
+
+[project.urls]
+Repository = "https://github.com/RoseZiyuXu/name-that-move"
+Issues = "https://github.com/RoseZiyuXu/name-that-move/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/motion_clf"]
+packages = ["src/name_that_move"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+extend-select = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"notebooks/**" = ["D"]
