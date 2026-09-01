@@ -57,6 +57,7 @@ class AsyncWindowRecorder:
         )
         self._error: Exception | None = None
         self._closed = False
+        self._submitted_count = 0
         self._thread = Thread(target=self._run, name="imu-window-recorder", daemon=True)
         self._thread.start()
 
@@ -64,6 +65,11 @@ class AsyncWindowRecorder:
     def recording_dir(self) -> Path:
         """Directory containing this label and session's recorded windows."""
         return self.output_dir / self.label / self.session
+
+    @property
+    def submitted_count(self) -> int:
+        """Number of windows accepted for saving in this session."""
+        return self._submitted_count
 
     def submit(self, window: CompletedWindow) -> bool:
         """Queue a window for saving and return immediately."""
@@ -76,6 +82,7 @@ class AsyncWindowRecorder:
             self._queue.put_nowait(window)
         except Full:
             return False
+        self._submitted_count += 1
         return True
 
     def close(self) -> None:
@@ -112,8 +119,19 @@ class AsyncWindowRecorder:
             raise TypeError("recorder queue contained an invalid window")
         self.recording_dir.mkdir(parents=True, exist_ok=True)
         captured_at = datetime.now(timezone.utc)
-        timestamp = captured_at.strftime("%Y%m%dT%H%M%S_%fZ")
-        stem = f"imu{self.imu_id}_{timestamp}"
+        captured_at_local = captured_at.astimezone()
+        local_timestamp = (
+            f"{captured_at_local:%Y%m%d_%H%M%S}_"
+            f"{captured_at_local.microsecond // 10_000:02d}"
+        )
+        base_stem = f"imu{self.imu_id}_{local_timestamp}"
+        stem = base_stem
+        duplicate_number = 2
+        while (self.recording_dir / f"{stem}.pkl").exists() or (
+            self.recording_dir / f"{stem}.json"
+        ).exists():
+            stem = f"{base_stem}_{duplicate_number:02d}"
+            duplicate_number += 1
         data_path = self.recording_dir / f"{stem}.pkl"
         metadata_path = self.recording_dir / f"{stem}.json"
 

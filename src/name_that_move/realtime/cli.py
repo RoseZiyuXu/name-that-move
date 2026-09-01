@@ -84,17 +84,20 @@ def main() -> None:
         imu_id=args.imu_id,
         config=config,
     )
+    last_reported_count = 0
 
     def report_window(window: CompletedWindow) -> None:
+        nonlocal last_reported_count
         diagnostics = window.diagnostics
-        message = (
-            f"Captured {window.data.shape} window | "
-            f"OSC messages: {diagnostics.osc_message_count} | "
-            f"max channel age: {diagnostics.max_channel_age_s:.3f}s"
-        )
-        print(message, flush=True)
+        if recorder.submitted_count > last_reported_count:
+            last_reported_count = recorder.submitted_count
+            print(f"Captured window {last_reported_count}", flush=True)
         if diagnostics.max_channel_age_s > args.stale_warning:
-            print("Warning: at least one channel may be stale", flush=True)
+            print(
+                "Warning: at least one channel may be stale "
+                f"(no update for {diagnostics.max_channel_age_s:.3f}s)",
+                flush=True,
+            )
 
     pipeline = RealtimePipeline(
         config=config,
@@ -131,6 +134,11 @@ def main() -> None:
         pipeline.run_forever()
     except TimeoutError as error:
         raise SystemExit(f"Error: {error}") from None
+    print("\nRecording stopped.")
+    print(
+        f"Saved {recorder.submitted_count} windows to: {recorder.recording_dir}",
+        flush=True,
+    )
 
 
 if __name__ == "__main__":
