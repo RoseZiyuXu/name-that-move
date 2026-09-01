@@ -15,7 +15,7 @@ What to cite
   *Human-Machine Ritual: Synergic Performance through Real-Time Motion
   Recognition*.
 * **For the dance-performance and attentive-machine-learning context**, cite
-  *Creativity ≠ Generativity: A Case Study of Attentive Machine Learning in
+  *Creativity* ≠ *Generativity: A Case Study of Attentive Machine Learning in
   Dance Performance*.
 * When a project substantially draws on both the implementation and its
   research context, cite the software and the relevant paper or papers.
