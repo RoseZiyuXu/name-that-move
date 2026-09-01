@@ -25,3 +25,15 @@ table.acquisition-comparison td {
   vertical-align: top;
   white-space: normal;
 }
+
+table.configuration-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.configuration-table th,
+table.configuration-table td {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  white-space: normal;
+}

@@ -1,10 +1,11 @@
 Configuration quick reference
 =============================
 
-Use this page when adapting Name That Move to a new sensor, movement dataset,
-or performance system. A parameter being configurable does **not** always mean
-it can change after training: model-input settings must remain aligned across
-recording, training, saved-model loading, and inference.
+Use this page as a quick-reference guide when adapting Name That Move to your
+own sensor, data stream, model, or performance setup. A parameter being
+configurable does **not** always mean it can change after training: model-input
+settings must remain aligned across recording, training, saved-model loading,
+and inference.
 
 Must match from recording through inference
 -------------------------------------------
@@ -14,6 +15,7 @@ dataset and reuse the same :class:`~name_that_move.IMUWindowConfig` throughout
 the workflow.
 
 .. list-table:: Model-input configuration
+   :class: configuration-table
    :widths: 22 18 26 34
    :header-rows: 1
 
@@ -62,11 +64,12 @@ saved with that configuration.
 Configure for each recording setup
 ----------------------------------
 
-These settings control acquisition and file organization. They may change
-without retraining, provided that the resulting windows still satisfy the
-model-input contract above.
+These settings control how sensor data are received and how recording files are
+organized. They may change without retraining, provided that the resulting
+windows still satisfy the model-input contract above.
 
 .. list-table:: Recording configuration
+   :class: configuration-table
    :widths: 22 18 28 32
    :header-rows: 1
 
