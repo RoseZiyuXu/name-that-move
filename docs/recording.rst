@@ -6,11 +6,16 @@ Prepare the connection
 
 Before recording:
 
-1. Attach and start the Movesense sensor.
-2. Connect the sensor to Holonist over BLE.
-3. Connect the phone and computer to the same Wi-Fi network.
-4. Configure Holonist to send OSC to the computer's IP and selected port.
+1. Attach and start your six-axis IMU sensor (for example, Movesense Sport).
+2. Connect it to your data-transmitter app (for example, Holon.ist over BLE).
+3. If the app runs on a phone, connect the phone and computer to the same
+   Wi-Fi network.
+4. Configure the app to send OSC to the computer's IP and selected port.
 5. Confirm that the OSC prefix and all six channel suffixes match the receiver.
+
+Movesense Sport and Holon.ist are the tested reference setup, not package
+requirements. You may replace either component as long as the OSC sender
+provides the six channels described by the :doc:`data_contract`.
 
 Install the real-time option
 ----------------------------
@@ -42,8 +47,8 @@ files.
 Use a different OSC namespace
 -----------------------------
 
-The default ``--imu-id 1`` expects addresses under ``/m/1``. If another phone
-app uses a different leading namespace, replace it without changing the six
+The default ``--imu-id 1`` expects addresses under ``/m/1``. If another OSC
+sender uses a different leading namespace, replace it without changing the six
 channel suffixes:
 
 .. code-block:: console
@@ -78,5 +83,6 @@ Connection diagnostics
 
 The terminal prints expected OSC paths and reports each completed window. A
 stale-channel warning indicates that at least one channel may not have updated
-recently. If no windows appear, check BLE connection, phone target IP, Wi-Fi,
-OSC port, IMU ID or custom prefix, and address paths.
+recently. If no windows appear, check the sensor-to-transmitter connection,
+sender target IP, network, OSC port, IMU ID or custom prefix, and address
+paths.

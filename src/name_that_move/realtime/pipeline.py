@@ -93,9 +93,9 @@ class RealtimePipeline:
             self.stop()
             raise TimeoutError(
                 "No complete six-channel OSC input arrived within "
-                f"{self.startup_timeout_s:.1f} seconds. Check the sensor-to-phone "
-                "connection, phone OSC sender, computer IP, UDP port, IMU ID, "
-                "and expected OSC address paths."
+                f"{self.startup_timeout_s:.1f} seconds. Check the "
+                "sensor-to-transmitter connection, OSC sender, computer IP, "
+                "UDP port, IMU ID, and expected OSC address paths."
             )
 
     def stop(self) -> None:

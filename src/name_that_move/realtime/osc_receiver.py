@@ -46,7 +46,7 @@ def osc_channel_paths(
 ) -> dict[str, str]:
     """Return the expected OSC address for every six-axis IMU channel.
 
-    When ``prefix`` is omitted, paths use the existing ``/m/<imu_id>`` phone
+    When ``prefix`` is omitted, paths use the default ``/m/<imu_id>`` OSC
     convention. A custom prefix changes only that namespace; the six semantic
     channel suffixes remain part of the package data contract.
 

@@ -18,8 +18,8 @@ OSC is the current stable acquisition adapter. Planned direct BLE support will
 replace only that first adapter: it will decode sensor packets into the same
 named six-channel values and then reuse the existing window buffer and every
 downstream component. The BLE option will therefore complement, not replace,
-the phone-to-OSC workflow. See :doc:`hardware_setup` for the practical
-tradeoffs.
+the vendor-neutral OSC workflow. See :doc:`hardware_setup` for the practical
+tradeoffs and one tested sensor/app configuration.
 
 Sampling immediately continues after a window is completed. Saving and
 inference use independent bounded worker queues, so disk or network latency

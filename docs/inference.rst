@@ -138,7 +138,7 @@ If another OSC sender uses a different namespace but preserves the six
 continues to produce the default ``/m/1/...`` paths.
 
 TouchDesigner receives the label at ``/sensor/1/label`` and confidence at
-``/sensor/1/confidence``. Port 10000 is the sensor/phone-to-package input;
+``/sensor/1/confidence``. Port 10000 is the OSC-sender-to-package input;
 port 8000 is the separate package-to-TouchDesigner output. OSC sampling
 continues in its own thread while model inference and downstream output run
 through the bounded inference worker.

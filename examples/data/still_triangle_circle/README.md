@@ -3,6 +3,8 @@
 This deliberately public dataset accompanies the Name That Move tutorial. It
 contains three movement classes recorded by Ziyu "Rose" Xu with one Movesense
 Sport sensor worn on the right wrist in an upright, watch-like orientation.
+Movesense identifies the device used to create this dataset; it is not a
+hardware requirement for using Name That Move.
 
 ## Contents
 
@@ -30,4 +32,3 @@ this trusted repository, and do not load untrusted `.pkl` files.
 
 Unless otherwise noted, these example files are provided under the repository's
 [MIT License](../../../LICENSE).
-

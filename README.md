@@ -7,6 +7,11 @@ Name That Move turns multichannel IMU time series into labeled movements. The
 package supports dataset preparation, offline augmentation, training, model
 persistence, batch inference, and real-time OSC recording.
 
+The package is sensor- and transmitter-agnostic at its six-channel data
+boundary. Movesense Sport and Holon.ist are the tested reference combination,
+not requirements; users may substitute another IMU sensor, OSC sender, or
+acquisition workflow that satisfies the documented input contract.
+
 > **Project status:** Alpha. The core pipeline works, while the public API and
 > cross-platform installation are still being tested.
 
@@ -102,8 +107,9 @@ below records two-second windows at 52 Hz, producing `(6, 104)` arrays:
 name-that-move-record --label line --sample-rate 52 --window-duration 2
 ```
 
-Configure the phone to send to the computer's local-network IP on port
-`10000`, using these addresses for the default IMU ID:
+Configure the OSC sender—for example, a phone data-transmitter app—to send to
+the computer's local-network IP on port `10000`, using these addresses for the
+default IMU ID:
 
 ```text
 /m/1/acc/x

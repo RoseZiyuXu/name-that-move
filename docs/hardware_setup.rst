@@ -1,13 +1,16 @@
 Hardware and data flow
 ======================
 
-Supported OSC setup
--------------------
+Tested reference OSC setup
+--------------------------
 
-The current tested workflow uses:
+Name That Move does not require a particular sensor brand, phone, or OSC app.
+It operates on the six-channel :doc:`data_contract`, so users may replace any
+acquisition component that can produce compatible data. The reference setup
+tested for this project uses:
 
-* a Movesense Sport six-axis IMU;
-* an iPhone running Holonist as the BLE-to-OSC bridge;
+* a six-axis IMU sensor (Movesense Sport);
+* a phone running a BLE-to-OSC data-transmitter app (Holon.ist on iPhone);
 * a macOS or Windows computer running Name That Move; and
 * a shared Wi-Fi network for the phone and computer.
 
@@ -15,28 +18,29 @@ The data path is:
 
 .. code-block:: text
 
-   Movesense Sport
+   Six-axis IMU sensor (for example, Movesense Sport)
        │  BLE
        ▼
-   iPhone + Holonist
+   Phone + data-transmitter app (for example, Holon.ist)
        │  OSC over Wi-Fi
        ▼
    Name That Move on the computer
        ├── recorded IMU windows
        └── optional inference → TouchDesigner or another media system
 
-The phone is the OSC sender. Configure Holonist with the computer's local IP
-address and the same UDP port that Name That Move will receive. The default
-package port is ``10000``. Both devices must be on the same Wi-Fi network.
+The phone app is the OSC sender. Configure it with the computer's local IP
+address and the same UDP port that Name That Move will receive. In the tested
+setup, these settings are entered in Holon.ist. The default package port is
+``10000``. Both devices must be on the same Wi-Fi network.
 
 Acquisition choices
 -------------------
 
 Name That Move keeps sensor acquisition separate from window construction,
-recording, and inference. The stable release currently supports the
-phone-to-OSC path above. A direct Movesense-to-laptop BLE adapter is under
-development and will be offered as an additional choice rather than replacing
-OSC.
+recording, and inference. The stable release currently supports OSC input from
+any sender that follows the documented channel paths. A direct
+Movesense-to-laptop BLE adapter is under development as an additional choice,
+not a replacement for generic OSC input.
 
 .. list-table:: OSC bridge and direct BLE at a glance
    :header-rows: 1
@@ -65,16 +69,16 @@ local or remote inference worker, and optional TouchDesigner output.
 
 .. code-block:: text
 
-   Movesense ── BLE ──> phone + OSC ──┐
+   IMU sensor ──> transmitter + OSC ──┐
                                       ├──> shared IMU samples and windows
-   Movesense ── direct BLE ───────────┘       ├── recording
+   compatible IMU ── direct BLE ──────┘       ├── recording
                                               ├── local/remote inference
                                               └── TouchDesigner output
 
 Expected OSC addresses
 ----------------------
 
-For the default Movesense ID ``1``, the receiver expects:
+For the default IMU ID ``1``, the receiver expects:
 
 .. code-block:: text
 
@@ -109,7 +113,9 @@ must match those used for training.
 Alternative hardware
 --------------------
 
-Users may replace the Movesense/Holonist bridge with another sensor or data
-transport. It must ultimately provide the six named channels and satisfy the
-same data contract. Direct Movesense-to-laptop BLE support is optional future
-work and is not required for the current OSC workflow.
+Every part of the tested Movesense/Holon.ist setup is replaceable. Users may
+choose another IMU sensor, transmitter app, phone or computer platform, and
+downstream media system. The acquisition path must ultimately provide the six
+named channels and satisfy the same data contract. Direct
+Movesense-to-laptop BLE support is optional future work and is not required
+for the current vendor-neutral OSC workflow.

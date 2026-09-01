@@ -87,11 +87,11 @@ model-input contract above.
    * - OSC input ``port``
      - ``10000``
      - ``--port`` or real-time Python API
-     - Phone sender and computer receiver must use the same UDP port.
+     - OSC sender and computer receiver must use the same UDP port.
    * - OSC bind ``ip``
      - ``0.0.0.0``
      - ``--ip`` or real-time Python API
-     - Usually keep the default; the phone targets the computer's local IP.
+     - Usually keep the default; the sender targets the computer's local IP.
    * - ``label``
      - Required
      - ``--label``

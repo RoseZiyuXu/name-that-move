@@ -40,7 +40,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--port", type=int, default=DEFAULT_OSC_PORT, help="OSC input port"
     )
     parser.add_argument(
-        "--imu-id", type=int, default=DEFAULT_IMU_ID, help="Movesense OSC ID"
+        "--imu-id",
+        type=int,
+        default=DEFAULT_IMU_ID,
+        help="IMU ID used by the default /m/<imu-id> OSC prefix",
     )
     parser.add_argument(
         "--osc-prefix",

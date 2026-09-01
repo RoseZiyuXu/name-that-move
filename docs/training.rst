@@ -4,11 +4,13 @@ Train the example model
 Motion examples and sensor placement
 ------------------------------------
 
-Wear the Movesense sensor on the **right wrist**. Keep the sensor upright in
-the same orientation it would have when you raise your arm to read a watch.
-Use the same placement and orientation during recording, training-data
-collection, and real-time inference so that the channel directions remain
-consistent.
+For the published example model, wear a six-axis IMU sensor on the **right
+wrist**. The example data were recorded with a Movesense Sport, but another
+sensor may be used if it provides the same channel contract. Keep the sensor
+upright in the same orientation it would have when you raise your arm to read
+a watch. Use the same placement and orientation during recording,
+training-data collection, and real-time inference so that the channel
+directions remain consistent.
 
 The example dataset uses ``still``, ``triangle``, and ``circle``. For
 ``still``, hold the right wrist comfortably still. The following demonstrations
