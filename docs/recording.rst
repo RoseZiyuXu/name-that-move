@@ -23,7 +23,7 @@ Install the real-time option
 .. code-block:: console
 
    conda activate name-that-move
-   python -m pip install ".[realtime]"
+   python -m pip install --editable ".[realtime]"
 
 Start a recording session
 -------------------------
@@ -85,4 +85,6 @@ The terminal prints expected OSC paths and reports each completed window. A
 stale-channel warning indicates that at least one channel may not have updated
 recently. If no windows appear, check the sensor-to-transmitter connection,
 sender target IP, network, OSC port, IMU ID or custom prefix, and address
-paths.
+paths. If stale-channel warnings begin after recording has started, stop the
+recorder and restore the stream; do not use windows captured after that
+interruption as training data.

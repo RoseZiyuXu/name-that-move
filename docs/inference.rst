@@ -47,22 +47,24 @@ Evaluate a later recording session
 ----------------------------------
 
 Use offline session evaluation when the movement has already been recorded.
-For example, after training on Sessions 1 and 2, evaluate a new ``circle4``
-folder without starting OSC or performing the movement again:
+This runnable public example evaluates the held-out ``circle3`` session used
+by the tutorial, without starting OSC or performing the movement again:
 
 .. code-block:: console
 
    name-that-move-evaluate \
-     --session-dir artifacts/datasets/example_data/circle4 \
+     --session-dir examples/data/still_triangle_circle/circle3 \
      --model-dir examples/models/still_triangle_circle \
      --model-tag still_triangle_circle_v0 \
      --expected-label circle
 
 The command loads every ``.pkl`` window in the folder as one batch and reports
 the number of windows, predicted-label distribution, mean confidence, and
-accuracy when ``--expected-label`` is supplied. Run it once for each class's
-new session folder. Session 4 should remain outside training if the result is
-being used as genuinely held-out evidence.
+accuracy when ``--expected-label`` is supplied. To evaluate newly recorded
+data, replace ``--session-dir`` with a folder such as
+``artifacts/recordings/circle/circle_session_04``. A later session should
+remain outside training if the result is being used as genuinely held-out
+evidence.
 
 If the model is hosted remotely, replace ``--model-dir`` and ``--model-tag``
 with the endpoint. Saved windows are uploaded one at a time; no live OSC input
@@ -71,7 +73,7 @@ is needed:
 .. code-block:: console
 
    name-that-move-evaluate \
-     --session-dir artifacts/datasets/example_data/circle4 \
+     --session-dir examples/data/still_triangle_circle/circle3 \
      --remote-url https://your-model-server.example/process \
      --http-timeout 2 \
      --expected-label circle

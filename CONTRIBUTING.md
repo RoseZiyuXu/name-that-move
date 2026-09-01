@@ -58,7 +58,7 @@ cd name-that-move
 python -m venv .venv
 source .venv/bin/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install ".[dev,docs]"
+python -m pip install --editable ".[dev,docs,realtime,remote]"
 ```
 
 Run the same core checks used by continuous integration:

@@ -75,7 +75,7 @@ For local development:
 ```bash
 git clone https://github.com/RoseZiyuXu/name-that-move.git
 cd name-that-move
-python -m pip install ".[dev]"
+python -m pip install --editable ".[dev]"
 ```
 
 For recording without development tools:

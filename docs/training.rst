@@ -55,7 +55,7 @@ Activate the environment and ensure the latest local source has been installed:
 .. code-block:: console
 
    conda activate name-that-move
-   python -m pip install --no-deps .
+   python -m pip install --editable .
    python examples/train_example_model.py
 
 The script:

@@ -6,7 +6,7 @@ Run quality checks from the repository root:
 .. code-block:: console
 
    conda activate name-that-move
-   python -m pip install ".[dev,docs]"
+   python -m pip install --editable ".[dev,docs,realtime,remote]"
    python -m pytest
    ruff check .
    python -m sphinx -W --keep-going -b html docs docs/_build/html

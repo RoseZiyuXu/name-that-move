@@ -29,19 +29,25 @@ Install from GitHub
 Install a local checkout
 ------------------------
 
+Use a local checkout when following the tutorials: the repository includes
+the public example dataset, saved model, training script, and TouchDesigner
+patch referenced by their commands.
+
 .. code-block:: console
 
    git clone https://github.com/RoseZiyuXu/name-that-move.git
    cd name-that-move
-   python -m pip install .
+   python -m pip install --editable .
 
-This project uses a regular installation rather than editable mode. After
-changing package source code, reinstall it before running examples:
+Editable mode keeps the active environment connected to this checkout's
+``src/`` directory. Source-code edits are therefore visible without repeatedly
+reinstalling the package. Reinstall after changing dependencies, optional
+features, package metadata, or command-line entry points:
 
 .. code-block:: console
 
    conda activate name-that-move
-   python -m pip install --no-deps .
+   python -m pip install --editable .
 
 Verify the active installation
 ------------------------------
@@ -50,14 +56,17 @@ Verify the active installation
 
    python -c "import name_that_move; print(name_that_move.__file__)"
 
-The printed path should point into the currently active environment.
+For a GitHub installation, the printed path should point into the currently
+active environment. For an editable checkout, it should point to this
+repository's ``src/name_that_move`` directory. It should never point to the
+Conda ``base`` environment when the project environment is active.
 
 Developer and documentation tools
 ---------------------------------
 
 .. code-block:: console
 
-   python -m pip install ".[dev,docs]"
+   python -m pip install --editable ".[dev,docs,realtime,remote]"
    python -m pytest
    ruff check .
    python -m build

@@ -57,6 +57,8 @@ shared.
   output.
 - Continue refining command-line feedback and fail-fast connection guidance for
   workshop and performance use.
+- Detect stream interruption after startup and suppress stale recording windows
+  and repeated predictions until fresh sensor data resumes.
 
 ## Dataset and evaluation development
 
