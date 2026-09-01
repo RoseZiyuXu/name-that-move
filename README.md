@@ -1,18 +1,22 @@
 # Name That Move
 
-**IMU motion classification for dance, choreography, and interactive
+**IMU-based motion classification for dance, choreography, and interactive
 performance — powered by MiniRocket.**
 
 Name That Move turns multichannel IMU time series into labeled movements. The
 package supports dataset preparation, offline augmentation, training, model
 persistence, batch inference, and real-time OSC recording.
 
+[MiniRocket](https://arxiv.org/abs/2012.08791)—short for MINImally RandOm
+Convolutional KErnel Transform—is the time-series feature transform used by
+the example training pipeline.
+
 The package is sensor- and transmitter-agnostic at its six-channel data
 boundary. Movesense Sport and Holon.ist are the tested reference combination,
 not requirements; users may substitute another IMU sensor, OSC sender, or
 acquisition workflow that satisfies the documented input contract.
 
-> **Project status:** Alpha. The core pipeline works, while the public API and
+> **Project status:** The core pipeline works. The public API and
 > cross-platform installation are still being tested.
 
 ## Input convention

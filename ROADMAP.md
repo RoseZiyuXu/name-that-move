@@ -1,9 +1,9 @@
 # Name That Move Development Roadmap
 
-Name That Move is alpha research software. This roadmap records development
-ideas and priorities; it is not a promise that every item will be implemented
-or included in a particular release. Priorities may change through real-world
-use, research needs, maintainer capacity, and community contributions.
+This roadmap records development ideas and priorities; it is not a promise
+that every item will be implemented or included in a particular release.
+Priorities may change through real-world use, research needs, maintainer
+capacity, and community contributions.
 
 ## Current foundation
 
@@ -46,7 +46,7 @@ shared.
 - Test the built distributions through TestPyPI in a clean environment.
 - Configure PyPI Trusted Publishing with a tag-triggered workflow and a manual
   approval environment.
-- Publish an initial alpha release and document version and release practices.
+- Publish an initial release and document version and release practices.
 - Continue testing installation and commands on the three supported operating
   systems.
 

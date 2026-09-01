@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "name-that-move"
 version = "0.1.0"
-description = "IMU motion classification for dance and interactive performance"
+description = "IMU-based motion classification for dance and interactive performance"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -19,7 +19,6 @@ keywords = [
     "interactive-performance",
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",

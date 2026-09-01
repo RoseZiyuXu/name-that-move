@@ -11,6 +11,8 @@ What to cite
 
 * **When using the software**, cite the specific Name That Move release so
   readers can identify the implementation and version used.
+* **When describing the time-series classification method**, cite the
+  MiniRocket paper by Dempster, Schmidt, and Webb.
 * **For the technical and performance-system background**, cite
   *Human-Machine Ritual: Synergic Performance through Real-Time Motion
   Recognition*.
@@ -38,6 +40,31 @@ https://github.com/RoseZiyuXu/name-that-move
 
 The machine-readable citation metadata are available in
 :download:`CITATION.cff <../CITATION.cff>`.
+
+MiniRocket method
+-----------------
+
+Angus Dempster, Daniel F. Schmidt, and Geoffrey I. Webb. "MiniRocket: A Very
+Fast (Almost) Deterministic Transform for Time Series Classification."
+*Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery and Data
+Mining*, 2021, 248–257. https://doi.org/10.1145/3447548.3467231
+
+MiniRocket is short for MINImally RandOm Convolutional KErnel Transform.
+
+.. code-block:: bibtex
+
+   @inproceedings{dempster_minirocket_2021,
+     author    = {Dempster, Angus and Schmidt, Daniel F. and Webb, Geoffrey I.},
+     title     = {MiniRocket: A Very Fast (Almost) Deterministic Transform for
+                  Time Series Classification},
+     booktitle = {Proceedings of the 27th ACM SIGKDD Conference on Knowledge
+                  Discovery and Data Mining},
+     year      = {2021},
+     pages     = {248--257},
+     publisher = {Association for Computing Machinery},
+     doi       = {10.1145/3447548.3467231},
+     url       = {https://doi.org/10.1145/3447548.3467231}
+   }
 
 Technical and system background
 -------------------------------
