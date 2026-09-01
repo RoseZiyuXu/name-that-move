@@ -1,0 +1,27 @@
+.image-provenance {
+  color: #6b7280;
+  font-size: 0.88em;
+  font-style: normal;
+  line-height: 1.5;
+  margin: -0.35em 1.5em 1.5em;
+}
+
+.image-provenance p {
+  margin-bottom: 0;
+}
+
+.acquisition-table-intro {
+  margin-bottom: 10px;
+}
+
+table.acquisition-comparison {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.acquisition-comparison th,
+table.acquisition-comparison td {
+  overflow-wrap: break-word;
+  vertical-align: top;
+  white-space: normal;
+}
