@@ -37,3 +37,15 @@ table.configuration-table td {
   vertical-align: top;
   white-space: normal;
 }
+
+table.inference-modes-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.inference-modes-table th,
+table.inference-modes-table td {
+  text-align: center;
+  vertical-align: middle;
+  white-space: normal;
+}

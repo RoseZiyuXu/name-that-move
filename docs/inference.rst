@@ -1,14 +1,158 @@
-Offline saved-model inference
-=============================
+Run inference
+=============
 
-Load the model
---------------
+After training a model, use inference to turn new IMU windows into movement
+labels and confidence values. Name That Move gives you two independent
+choices:
 
-Use the same IMU configuration used during training:
+* **When the movement data are processed:** use a completed recording session,
+  or classify new movement live as sensor data arrive.
+* **Where the model runs:** load saved model files on your computer, or send
+  each window to a compatible remote HTTP model server, such as one hosted in
+  the cloud.
+
+Together, these choices produce four modes:
+
+.. list-table:: Inference modes
+   :class: inference-modes-table
+   :widths: 24 38 38
+   :header-rows: 1
+
+   * - Movement data
+     - Local model
+     - Remote model
+   * - Recorded session
+     - Mode 1
+     - Mode 2
+   * - Live sensor stream
+     - Mode 3
+     - Mode 4
+
+The live modes are especially useful in performance and interactive-media
+contexts: a performer can make a new movement and receive its label and
+confidence while the movement is happening. All four modes use the same IMU
+window contract and produce the same class meaning, provided that the selected
+model was trained with matching sensor configuration, units, placement, and
+orientation.
+
+1. Recorded session + local model
+---------------------------------
+
+Use this mode after a movement session has been recorded and the saved model
+files are available on the same computer. No live OSC stream or network
+connection is needed.
+
+This public example evaluates the recorded ``circle3`` session with the
+bundled model:
+
+.. code-block:: console
+
+   name-that-move-evaluate \
+     --session-dir examples/data/still_triangle_circle/circle3 \
+     --model-dir examples/models/still_triangle_circle \
+     --model-tag still_triangle_circle_v0 \
+     --expected-label circle
+
+To evaluate your own later recording, replace ``--session-dir``,
+``--model-dir``, ``--model-tag``, and ``--expected-label`` with your paths and
+label. Keep the evaluated session outside training if you intend to describe
+the result as held-out evidence.
+
+2. Recorded session + remote model
+----------------------------------
+
+Use this mode when the movement is already recorded but inference should run
+on a compatible remote HTTP model server. The command reads each saved
+``.pkl`` window and uploads it to the endpoint; no live OSC input is needed.
+Name That Move does not currently publish a hosted model server, so this is a
+configuration template rather than a runnable public example:
+
+.. code-block:: console
+
+   name-that-move-evaluate \
+     --session-dir examples/data/still_triangle_circle/circle3 \
+     --remote-url https://my-model.example/process \
+     --http-timeout 2 \
+     --expected-label circle
+
+The ``.example`` URL is intentionally a placeholder. Replace it with an
+available server that implements the expected Name That Move request and
+response format.
+
+3. Live sensor stream + local model
+-----------------------------------
+
+Use this mode to classify new movement in real time with model files stored on
+the performance computer. The command listens for live six-channel OSC data,
+constructs complete windows, and prints each predicted label and confidence.
+
+.. code-block:: console
+
+   name-that-move-live \
+     --model-dir examples/models/still_triangle_circle \
+     --model-tag still_triangle_circle_v0 \
+     --ip 0.0.0.0 \
+     --port 10000 \
+     --imu-id 1
+
+If the incoming OSC addresses do not begin with the default ``/m/1``, add
+``--osc-prefix /your/prefix`` to replace that leading path. The six channel
+endings, from ``acc/x`` through ``gyro/z``, remain fixed. See
+:doc:`configuration` for more examples.
+
+4. Live sensor stream + remote model
+------------------------------------
+
+Use this mode to receive live sensor data on the performance computer while a
+compatible HTTP server performs inference. Completed windows are sent without
+blocking the real-time sampling thread.
+
+.. code-block:: console
+
+   name-that-move-live \
+     --remote-url https://my-model.example/process \
+     --http-timeout 2 \
+     --ip 0.0.0.0 \
+     --port 10000 \
+     --imu-id 1
+
+The local and remote live modes return the same ``Prediction(label,
+confidence)`` result. ``name-that-move-live`` requires exactly one backend and
+rejects attempts to provide both ``--model-dir`` and ``--remote-url``.
+
+Understand the common settings and results
+------------------------------------------
+
+For recorded-session inference, ``name-that-move-evaluate`` loads every
+``.pkl`` window in the selected folder and reports the window count,
+predicted-label distribution, mean confidence, and accuracy when
+``--expected-label`` is supplied.
+
+For live inference, ``--startup-timeout`` controls how long the pipeline waits
+for all six OSC channels to arrive. It is different from ``--http-timeout``,
+which begins only after a complete window exists and limits one remote HTTP
+request. If the OSC sender uses another namespace, add ``--osc-prefix`` while
+preserving the six ``acc/x`` through ``gyro/z`` suffixes.
+
+Local mode loads the model and checks its saved shape, sampling rate, duration,
+and channel order. Remote mode validates outgoing windows locally, but server
+availability and model compatibility remain the server operator's
+responsibility.
+
+Predict one recorded window with Python
+---------------------------------------
+
+For a custom application or notebook, load a local model and predict one saved
+window through the Python API:
 
 .. code-block:: python
 
-   from name_that_move import IMUWindowConfig, load_model
+   from name_that_move import (
+       IMUWindowConfig,
+       load_model,
+       load_segment,
+       predict,
+   )
 
    config = IMUWindowConfig(sample_rate_hz=48, window_duration_s=2)
    feature_extractor, learner = load_model(
@@ -16,14 +160,6 @@ Use the same IMU configuration used during training:
        tag="still_triangle_circle_v0",
        expected_config=config,
    )
-
-Predict a recorded window
--------------------------
-
-.. code-block:: python
-
-   from name_that_move import load_segment, predict
-
    window = load_segment(
        "examples/data/still_triangle_circle/circle3/"
        "imu9_20260824_193911_406.pkl"
@@ -37,85 +173,16 @@ Predict a recorded window
    print(labels[0])
    print(probabilities[0])
 
-``load_model`` checks saved shape, sampling rate, duration, and channel order.
-``predict`` checks incoming windows against the loaded feature extractor.
-Mismatches fail before MiniRocket feature extraction with an actionable error.
+``load_model`` and ``predict`` reject incompatible metadata or window shapes
+before MiniRocket feature extraction.
 
-The filename above is one window included in the public example dataset.
-
-Evaluate a later recording session
+Send live results to TouchDesigner
 ----------------------------------
 
-Use offline session evaluation when the movement has already been recorded.
-This runnable public example evaluates the held-out ``circle3`` session used
-by the tutorial, without starting OSC or performing the movement again:
-
-.. code-block:: console
-
-   name-that-move-evaluate \
-     --session-dir examples/data/still_triangle_circle/circle3 \
-     --model-dir examples/models/still_triangle_circle \
-     --model-tag still_triangle_circle_v0 \
-     --expected-label circle
-
-The command loads every ``.pkl`` window in the folder as one batch and reports
-the number of windows, predicted-label distribution, mean confidence, and
-accuracy when ``--expected-label`` is supplied. To evaluate newly recorded
-data, replace ``--session-dir`` with a folder such as
-``artifacts/recordings/circle/circle_session_04``. A later session should
-remain outside training if the result is being used as genuinely held-out
-evidence.
-
-If the model is hosted remotely, replace ``--model-dir`` and ``--model-tag``
-with the endpoint. Saved windows are uploaded one at a time; no live OSC input
-is needed:
-
-.. code-block:: console
-
-   name-that-move-evaluate \
-     --session-dir examples/data/still_triangle_circle/circle3 \
-     --remote-url https://your-model-server.example/process \
-     --http-timeout 2 \
-     --expected-label circle
-
-Choose local or remote live inference
--------------------------------------
-
-``name-that-move-live`` connects the same real-time OSC pipeline to exactly
-one inference backend. For the local example model:
-
-.. code-block:: console
-
-   name-that-move-live \
-     --model-dir examples/models/still_triangle_circle \
-     --model-tag still_triangle_circle_v0
-
-For the existing HTTP model server:
-
-.. code-block:: console
-
-   name-that-move-live \
-     --remote-url https://your-model-server.example/process \
-     --http-timeout 2
-
-The two modes return the same ``Prediction(label, confidence)`` result. The
-command requires one mode and rejects attempts to provide both. Local mode
-loads the model and verifies its saved IMU configuration before opening the
-OSC receiver. Remote mode validates the outgoing window locally; availability
-and model compatibility of the external server remain the server operator's
-responsibility.
-
-``--startup-timeout`` is different from ``--http-timeout``. The startup
-timeout applies to both local and remote modes and stops the pipeline when a
-complete set of six OSC channels has not arrived within two seconds. The
-remote timeout begins only after a window exists and limits one HTTP request.
-
-Add TouchDesigner output
-------------------------
-
-Run the complete public-example command below to receive six-channel IMU input
-on UDP port 10000, classify it locally, and forward every successful prediction
-to TouchDesigner on UDP port 8000:
+TouchDesigner is an optional destination for either live inference backend.
+This complete local-model example receives six-channel IMU input on UDP port
+10000, classifies it, and sends every successful prediction to TouchDesigner
+on UDP port 8000:
 
 .. code-block:: console
 
@@ -132,18 +199,11 @@ to TouchDesigner on UDP port 8000:
      --touchdesigner-port 8000 \
      --touchdesigner-path /sensor/1
 
-If another OSC sender uses a different namespace but preserves the six
-``acc/x`` through ``gyro/z`` suffixes, add a custom prefix. For example,
-``--osc-prefix /wearable/right-wrist`` expects
-``/wearable/right-wrist/acc/x`` through
-``/wearable/right-wrist/gyro/z``. When this option is omitted, ``--imu-id 1``
-continues to produce the default ``/m/1/...`` paths.
-
 TouchDesigner receives the label at ``/sensor/1/label`` and confidence at
-``/sensor/1/confidence``. Port 10000 is the OSC-sender-to-package input;
-port 8000 is the separate package-to-TouchDesigner output. OSC sampling
-continues in its own thread while model inference and downstream output run
-through the bounded inference worker.
+``/sensor/1/confidence``. Port 10000 is the sensor-data input; port 8000 is the
+separate prediction output. To use a remote model instead, replace
+``--model-dir`` and ``--model-tag`` with ``--remote-url`` and, optionally,
+``--http-timeout``.
 
 The repository includes a ready-to-open
 :download:`TouchDesigner visualizer <../examples/touchdesigner/name_that_move_visualizer.toe>`
