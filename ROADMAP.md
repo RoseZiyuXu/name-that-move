@@ -11,11 +11,13 @@ The package currently provides:
 
 - one configurable six-axis IMU window contract shared by training and
   inference;
-- session-aware dataset preparation and a small real-data example workflow;
+- session-aware dataset preparation, a public three-class example dataset,
+  and a compatible reference model;
 - saved-model loading and offline local or remote evaluation;
 - live local or remote inference from OSC input;
 - non-blocking recording and inference workers;
-- optional TouchDesigner prediction output;
+- optional TouchDesigner prediction output and a downloadable downstream
+  visualization example;
 - tests on Linux, macOS, and Windows; and
 - Sphinx documentation and Read the Docs pull-request builds.
 
@@ -48,21 +50,18 @@ shared.
 - Continue testing installation and commands on the three supported operating
   systems.
 
-### End-to-end tutorial and media example
+### End-to-end tutorial polish
 
-- Complete one reproducible walkthrough from sensor setup through recording,
-  training, saved-model evaluation, live inference, and media output.
-- Add a small TouchDesigner example patch that receives label and confidence
-  and maps predictions to a simple audiovisual response.
-- Keep command-line feedback and fail-fast connection guidance suitable for
+- Maintain and refine one reproducible walkthrough from sensor setup through
+  recording, training, saved-model evaluation, live inference, and media
+  output.
+- Continue refining command-line feedback and fail-fast connection guidance for
   workshop and performance use.
 
 ## Dataset and evaluation development
 
-- Release a deliberately public, consent-cleared example dataset with simple
-  classes such as stillness, triangle, and circle.
-- Release a compatible small example model and known-input, known-prediction
-  regression test.
+- Add a known-input, known-prediction regression test for the published
+  reference model.
 - Expand evaluation across recording sessions, performers, sensor placements,
   and devices without overstating small smoke-test results.
 - Record sensor timestamps and connection diagnostics when available, and
