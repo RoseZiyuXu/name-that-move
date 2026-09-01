@@ -23,6 +23,31 @@ def test_load_segments_accepts_bare_and_wrapped_arrays(tmp_path):
     assert y.tolist() == ["0", "0"]
 
 
+def test_discover_recording_sessions_reads_recorder_layout(tmp_path):
+    for label, sessions in {
+        "desk": ("desk_session_01", "desk_session_02"),
+        "water": ("water_session_01", "water_session_02"),
+    }.items():
+        for session in sessions:
+            session_dir = tmp_path / label / session
+            session_dir.mkdir(parents=True)
+            (session_dir / "window.pkl").touch()
+
+    discovered = data.discover_recording_sessions(tmp_path, labels=["water", "desk"])
+
+    assert discovered == {
+        "water": ("water/water_session_01", "water/water_session_02"),
+        "desk": ("desk/desk_session_01", "desk/desk_session_02"),
+    }
+
+
+def test_discover_recording_sessions_rejects_class_without_windows(tmp_path):
+    (tmp_path / "water" / "empty_session").mkdir(parents=True)
+
+    with pytest.raises(ValueError, match="No recorded sessions.*water"):
+        data.discover_recording_sessions(tmp_path, labels=["water"])
+
+
 def test_make_dataset_augments_training_samples_only(monkeypatch):
     X_orig = np.arange(10 * 2 * 3).reshape(10, 2, 3)
     y_orig = np.arange(10).astype(str)

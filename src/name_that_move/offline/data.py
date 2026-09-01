@@ -39,6 +39,67 @@ DEFAULT_FILE_NAMES = (
 )
 
 
+def discover_recording_sessions(
+    base_path: str | Path,
+    labels: Collection[str] | None = None,
+) -> dict[str, tuple[str, ...]]:
+    """Discover class/session folders created by ``name-that-move-record``.
+
+    The recorder writes ``<base_path>/<label>/<session>/*.pkl``. This helper
+    converts that layout into the mapping accepted by
+    :func:`make_session_dataset`, using paths relative to ``base_path``.
+
+    Parameters
+    ----------
+    base_path:
+        Recording root containing one directory per motion class.
+    labels:
+        Optional class names to include. When omitted, every class directory
+        containing recorded sessions is included.
+
+    Returns
+    -------
+    dict
+        Mapping from class label to its sorted relative session paths.
+
+    """
+    base_path = Path(base_path)
+    if not base_path.is_dir():
+        raise FileNotFoundError(f"Recording directory not found: {base_path}")
+    if isinstance(labels, (str, bytes)):
+        raise TypeError("labels must be a collection of class names")
+
+    requested = None if labels is None else tuple(labels)
+    if requested is not None:
+        if not requested:
+            raise ValueError("labels must not be empty")
+        if any(not isinstance(label, str) or not label for label in requested):
+            raise TypeError("labels must contain non-empty strings")
+        if len(set(requested)) != len(requested):
+            raise ValueError("labels must not contain duplicates")
+
+    label_names = requested or tuple(
+        path.name for path in sorted(base_path.iterdir()) if path.is_dir()
+    )
+    discovered: dict[str, tuple[str, ...]] = {}
+    for label in label_names:
+        label_path = base_path / label
+        if not label_path.is_dir():
+            raise FileNotFoundError(f"Motion class directory not found: {label_path}")
+        sessions = tuple(
+            session.relative_to(base_path).as_posix()
+            for session in sorted(label_path.iterdir())
+            if session.is_dir() and any(session.glob("*.pkl"))
+        )
+        if not sessions:
+            raise ValueError(f"No recorded sessions found for class '{label}'")
+        discovered[label] = sessions
+
+    if not discovered:
+        raise ValueError(f"No recorded sessions found under {base_path}")
+    return discovered
+
+
 def load_segments(
     base_path: str | Path,
     file_names: Sequence[str] = DEFAULT_FILE_NAMES,

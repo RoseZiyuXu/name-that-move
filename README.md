@@ -150,6 +150,31 @@ reported as unclassified rather than pausing acquisition.
 
 ## Train a model
 
+Record at least two motion classes in separate training and validation
+sessions, then train directly from the recorder's
+``artifacts/recordings/<label>/<session>/`` layout:
+
+**For every selected motion class, all sessions not supplied through
+`--validation-session` are automatically used for training.** Repeat
+`--validation-session` to hold out more than one complete session.
+
+```bash
+name-that-move-train \
+  --dataset-dir artifacts/recordings \
+  --label my_move \
+  --label your_move \
+  --validation-session my_move_session_02 \
+  --validation-session your_move_session_02 \
+  --output-dir artifacts/models/our_moves \
+  --model-tag our_moves_v0
+```
+
+This trains on the other discovered sessions, holds out both Session 2 folders,
+saves the model, reloads it, and reports held-out validation accuracy. See the
+training tutorial for the complete custom-data workflow.
+
+The Python API supports lower-level or programmatic workflows:
+
 ```python
 from name_that_move import (
     IMUWindowConfig,
@@ -204,7 +229,7 @@ python examples/train_example_model.py
 ```
 
 The script trains `still`, `triangle`, and `circle`, saves three model
-artifacts under `artifacts/models/example_data_smoke/`, reloads them, and runs
+artifacts under `artifacts/models/example_data/`, reloads them, and runs
 inference on the held-out session. The deliberately public source data and
 reference model live under `examples/data/still_triangle_circle/` and
 `examples/models/still_triangle_circle/`. Retrained outputs remain Git-ignored

@@ -29,7 +29,7 @@ python examples/train_example_model.py
 ```
 
 By default, retraining writes to the Git-ignored
-`artifacts/models/example_data_smoke/` so it does not silently overwrite this
+`artifacts/models/example_data/` so it does not silently overwrite this
 published reference model.
 
 Model files may use pickle internally. Load them only from this trusted

@@ -1,8 +1,77 @@
-Train the example model
-=======================
+Train a model
+=============
+
+Train with your own recordings
+------------------------------
+
+**For every selected motion class, all sessions not named with**
+``--validation-session`` **are automatically used for training.** You therefore
+choose the held-out sessions explicitly; the command uses the remaining
+discovered sessions as the training set.
+
+The training command reads the same folders created by
+``name-that-move-record``:
+
+.. code-block:: text
+
+   artifacts/recordings/
+   ├── my_move/
+   │   ├── my_move_session_01/
+   │   └── my_move_session_02/
+   └── your_move/
+       ├── your_move_session_01/
+       └── your_move_session_02/
+
+Use at least two motion classes and record separate sessions for each class.
+The following command trains on Session 1 and reserves Session 2 from both
+classes for held-out validation:
+
+.. code-block:: console
+
+   conda activate name-that-move
+   python -m pip install --editable .
+   name-that-move-train \
+     --dataset-dir artifacts/recordings \
+     --label my_move \
+     --label your_move \
+     --validation-session my_move_session_02 \
+     --validation-session your_move_session_02 \
+     --output-dir artifacts/models/our_moves \
+     --model-tag our_moves_v0 \
+     --epochs 10
+
+``my_move`` and ``your_move`` are placeholders; replace them with your own
+recording-label folder names.
+Repeat ``--label`` for every class you want to include and
+``--validation-session`` for every complete session you want to hold out. You
+may hold out more than one session per class by repeating the option; every
+other discovered session for that class becomes training data. A session name
+is accepted when it is unique; a relative path such as
+``my_move/my_move_session_02`` can resolve an ambiguous name.
+
+The command prints the split before training, validates all windows, trains
+and saves the model, reloads it, and reports accuracy on the held-out sessions.
+A tiny dataset can confirm that the workflow runs, but its accuracy should not
+be treated as evidence that the model will generalize to new performers,
+sensor placements, or recording conditions.
+
+The example above creates:
+
+.. code-block:: text
+
+   artifacts/models/our_moves/
+   ├── MRF-our_moves_v0.pt
+   ├── MRL-our_moves_v0.pkl
+   └── input_shape-our_moves_v0.pt
+
+Use this directory and tag with ``name-that-move-live`` or
+``name-that-move-evaluate`` after training.
+
+Train the bundled example model
+-------------------------------
 
 Motion examples and sensor placement
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 For the published example model, wear a six-axis IMU sensor on the **right
 wrist**. The example data were recorded with a Movesense Sport, but another
@@ -32,7 +101,7 @@ real time.
           :width: 100%
 
 Example dataset layout
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 The public example contains three motion classes and three separately
 recorded rounds:
@@ -47,8 +116,8 @@ recorded rounds:
 Each folder contains 30 two-second windows. The suffix identifies the
 recording session, not a separate class.
 
-Run the complete workflow
--------------------------
+Run the training script
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Activate the environment and ensure the latest local source has been installed:
 
@@ -69,22 +138,19 @@ The script:
 7. reloads those artifacts from disk; and
 8. runs inference on the held-out session.
 
-The tutorial includes the actual repository script so that documentation and
-executable code stay synchronized:
-
-.. literalinclude:: ../examples/train_example_model.py
-   :language: python
-   :caption: examples/train_example_model.py
-   :linenos:
+The third command runs the complete example workflow. You do not need to read
+or modify its Python code to use the example, but the complete source remains
+available here: :download:`examples/train_example_model.py
+<../examples/train_example_model.py>`.
 
 Saved model files
------------------
+^^^^^^^^^^^^^^^^^
 
 By default, the script creates:
 
 .. code-block:: text
 
-   artifacts/models/example_data_smoke/
+   artifacts/models/example_data/
    ├── MRF-still_triangle_circle_v0.pt
    ├── MRL-still_triangle_circle_v0.pkl
    └── input_shape-still_triangle_circle_v0.pt

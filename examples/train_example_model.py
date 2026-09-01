@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("artifacts/models/example_data_smoke"),
+        default=Path("artifacts/models/example_data"),
         help="Directory for the three saved model artifacts",
     )
     parser.add_argument("--tag", default="still_triangle_circle_v0")
@@ -65,7 +65,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Run the reproducible session-level training and inference smoke test."""
+    """Run the reproducible session-level training and inference workflow."""
     args = parse_args()
     np.random.seed(42)
     torch.manual_seed(42)

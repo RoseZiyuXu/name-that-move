@@ -8,6 +8,10 @@ from typing import Any
 _EXPORTS = {
     "SessionEvaluation": ("name_that_move.offline.evaluation", "SessionEvaluation"),
     "augment_segments": ("name_that_move.offline.data", "augment_segments"),
+    "discover_recording_sessions": (
+        "name_that_move.offline.data",
+        "discover_recording_sessions",
+    ),
     "evaluate_session": ("name_that_move.offline.evaluation", "evaluate_session"),
     "extract_features": ("name_that_move.offline.training", "extract_features"),
     "load_segments": ("name_that_move.offline.data", "load_segments"),
@@ -20,6 +24,7 @@ _EXPORTS = {
 __all__ = [
     "SessionEvaluation",
     "augment_segments",
+    "discover_recording_sessions",
     "evaluate_session",
     "extract_features",
     "load_segments",
