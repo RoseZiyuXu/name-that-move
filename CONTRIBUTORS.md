@@ -20,6 +20,7 @@ different forms of work that support this research software.
 
 ### Zhuodi Cai
 
+- Original project conceptualization and methodology development
 - Initial repository setup
 - Initial software implementation
 
