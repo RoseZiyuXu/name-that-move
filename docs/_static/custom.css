@@ -6,6 +6,18 @@
   margin: -0.35em 1.5em 1.5em;
 }
 
+.feedback-invitation {
+  background: #f6f1fa;
+  border-left: 4px solid #9b59b6;
+  border-radius: 2px;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+}
+
+.feedback-invitation p:last-child {
+  margin-bottom: 0;
+}
+
 .image-provenance p {
   margin-bottom: 0;
 }

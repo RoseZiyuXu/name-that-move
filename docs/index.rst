@@ -1,8 +1,8 @@
 Name That Move
 ==============
 
-**IMU-based motion classification for dance, choreography, and interactive
-performance — powered by MiniRocket.**
+**Wearable-sensor movement recognition for dance, choreography, and
+interactive performance!**
 
 Name That Move supports a path from six-axis IMU recordings to offline model
 training, saved-model inference, and reusable real-time performance components.
@@ -17,16 +17,37 @@ This documentation describes the hardware and OSC workflow used by the
 project. Other sensors and transports can be used when they produce the same
 model-ready data contract.
 
-.. note::
+**New to Python or terminal commands?** Begin with :doc:`before_you_begin`. It
+explains what the terminal is, how to read a command, and how to stop or
+correct one safely.
 
-   Recording, training, and saved-model inference are functional. Live OSC
-   windows can use either a local saved model or a remote HTTP endpoint. Direct
-   sensor-to-laptop BLE remains development work.
+.. container:: feedback-invitation
+
+   **Questions and feedback are welcome**
+
+   Questions, corrections, unsuccessful experiments, and suggestions are all
+   valuable contributions. If something in the package or documentation is
+   unclear, please `open a GitHub Issue
+   <https://github.com/RoseZiyuXu/name-that-move/issues>`_. If GitHub is
+   unfamiliar or your message involves private participant data or unpublished
+   artistic material, please do not hesitate to `contact Rose
+   <https://github.com/RoseZiyuXu>`_. Feedback from artists, researchers,
+   students, performers, and first-time command-line users helps this project
+   become more useful and welcoming.
+
+Current capabilities
+--------------------
+
+Name That Move supports recording, training, saved-model inference, and live
+OSC workflows using either a local saved model or a remote HTTP endpoint.
+Direct sensor-to-laptop BLE is planned as an optional input route, while OSC
+remains the stable and flexible reference workflow.
 
 .. toctree::
    :maxdepth: 2
    :caption: Start here
 
+   before_you_begin
    installation
    hardware_setup
    data_contract
