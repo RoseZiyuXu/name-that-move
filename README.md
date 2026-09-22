@@ -1,7 +1,7 @@
 # Name That Move
 
-**IMU-based motion classification for dance, choreography, and interactive
-performance — powered by MiniRocket.**
+**Wearable-sensor movement recognition for dance, choreography, and
+interactive performance!**
 
 Name That Move turns multichannel IMU time series into labeled movements. The
 package supports dataset preparation, offline augmentation, training, model
@@ -15,6 +15,13 @@ The package is sensor- and transmitter-agnostic at its six-channel data
 boundary. Movesense Sport and Holon.ist are the tested reference combination,
 not requirements; users may substitute another IMU sensor, OSC sender, or
 acquisition workflow that satisfies the documented input contract.
+
+> **Questions and feedback are welcome.** Questions, corrections, unsuccessful
+> experiments, and suggestions are all valuable contributions. If something is
+> unclear, please [open a GitHub Issue](https://github.com/RoseZiyuXu/name-that-move/issues).
+> If GitHub is unfamiliar or your message involves private participant data or
+> unpublished artistic material, please do not hesitate to
+> [contact Rose](https://github.com/RoseZiyuXu).
 
 > **Project status:** The core pipeline works. The public API and
 > cross-platform installation are still being tested.
