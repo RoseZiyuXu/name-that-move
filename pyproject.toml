@@ -49,8 +49,6 @@ dev = [
     "pytest",
     "ruff==0.16.0",
     "build",
-    "ipykernel",
-    "jupyter",
     "python-osc>=1.9",
     "requests>=2.31",
 ]
